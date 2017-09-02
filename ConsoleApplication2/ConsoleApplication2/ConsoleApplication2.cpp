@@ -185,8 +185,8 @@ int main()
 		}
 
 		printf("\nEnter a direction(WASD) or press Q to exit:\n");
-		scanf_s("%c", &option,1);
-		fgets(a, 15, stdin);
+		option = _getch();
+		
 		
 		switch(option)
 		{
