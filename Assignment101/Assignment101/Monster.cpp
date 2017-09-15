@@ -1,20 +1,23 @@
+#include "Vector2.h"
+#include<stdlib.h>
+
 class Monster
 {
 public:
 
 
-	coordinate currentLocation;
+	Vector2 currentLocation;
 	char monsterName[15];
 
-	coordinate getLocation()
+	Vector2 getLocation()
 	{
 		return currentLocation;
 	}
 
 	Monster()
 	{
-		currentLocation.xPos = rand() % 50;
-		currentLocation.yPos = rand() % 50;
+		currentLocation.setX(rand() % 50);
+		currentLocation.setY(rand() % 50);
 	}
 
 	void moveMonster()
@@ -22,27 +25,27 @@ public:
 		int dir = rand() % 4;
 		switch (dir)
 		{
-		case 0: currentLocation.xPos += 1;
+		case 0: currentLocation.setX(currentLocation.getX()+1);
 			break;
-		case 1: currentLocation.xPos -= 1;
+		case 1: currentLocation.setX(currentLocation.getX()-1);
 			break;
-		case 2: currentLocation.yPos += 1;
+		case 2: currentLocation.setY(currentLocation.getY()+1);
 			break;
-		case 3: currentLocation.yPos -= 1;
+		case 3: currentLocation.setY(currentLocation.getY()-1);
 			break;
 		}
-		if (currentLocation.xPos > 49)
-			currentLocation.xPos = 49;
-		if (currentLocation.xPos <0)
-			currentLocation.xPos = 0;
-		if (currentLocation.yPos > 49)
-			currentLocation.yPos = 49;
-		if (currentLocation.yPos <0)
-			currentLocation.yPos = 0;
+		if (currentLocation.getX() > 49)
+			currentLocation.setX(49);
+		if (currentLocation.getX() <0)
+			currentLocation.setX(0);
+		if (currentLocation.getY() > 49)
+			currentLocation.setY(49);
+		if (currentLocation.getY() <0)
+			currentLocation.setY(0);
 	}
-	bool areYouFoodYet(coordinate playerLocation)
+	bool areYouFoodYet(Vector2 playerLocation)
 	{
-		if (playerLocation.xPos == currentLocation.xPos && playerLocation.yPos == currentLocation.yPos)
+		if (playerLocation.getX() == currentLocation.getX() && playerLocation.getY() == currentLocation.getY())
 			return true;
 		else
 			return false;
