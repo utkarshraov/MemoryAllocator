@@ -3,41 +3,44 @@
 #include<stdlib.h>
 
 using namespace Engine;
-class Player
-{
-public:
-	Vector2 currentLocation;
-	char playerName[15];
 
-	Player()
+
+
+	Player::Player()
 	{
-		currentLocation.setX(rand() % 50);
-		currentLocation.setY(rand() % 50);
+		Player::currentLocation.setX(rand() % 50);
+		Player::currentLocation.setY(rand() % 50);
 	}
-	int updateLocation(char choice)
+	int Player::updateLocation(char choice)
 	{
 		int success = 0;
 		switch (choice)
 		{
-		case 'a': currentLocation.setX(currentLocation.getX() + 1);
+		case 'a': Player::currentLocation.setX(Player::currentLocation.getX() + 1);
+					
 			break;
-		case 'w': currentLocation.setX(currentLocation.getY() + 1);
+		case 'w': Player::currentLocation.setX(Player::currentLocation.getY() + 1);
 			break;
-		case 'd': currentLocation.setX(currentLocation.getX() - 1);
+		case 'd': Player::currentLocation.setX(Player::currentLocation.getX() - 1);
 			break;
-		case 's': currentLocation.setX(currentLocation.getY() - 1);
+		case 's': Player::currentLocation.setX(Player::currentLocation.getY() - 1);
 			break;
 		default: success = 1;
 			break;
 		}
-		if(currentLocation.getX() > 49)
-			currentLocation.setX(49);
-		if (currentLocation.getX() <0)
-			currentLocation.setX(0);
-		if (currentLocation.getY() > 49)
-			currentLocation.setY(49);
-		if (currentLocation.getY() <0)
-			currentLocation.setY(0);
+		if(Player::currentLocation.getX() > 49)
+			Player::currentLocation.setX(49);
+		if (Player::currentLocation.getX() <0)
+			Player::currentLocation.setX(0);
+		if (Player::currentLocation.getY() > 49)
+			Player::currentLocation.setY(49);
+		if (Player::currentLocation.getY() <0)
+			Player::currentLocation.setY(0);
+		return success;
 	}
 
-};
+	void Player::setPosition(Vector2 position) {
+		Player::currentLocation.setX(position.getX());
+		Player::currentLocation.setY(position.getY());
+	}
+

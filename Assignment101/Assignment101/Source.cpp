@@ -53,13 +53,13 @@ int main()
 		}
 	}
 	printf("\n\n\n\n");
-	printf("You spawned at (%d,%d)\n\n", player1.currentLocation.xPos, player1.currentLocation.yPos);
+	printf("You spawned at (%d,%d)\n\n", player1.currentLocation.getX(), player1.currentLocation.getY());
 	for (int i = 0; i < numMonsters; i++)
 	{
-		grid[monster[i].currentLocation.xPos][monster[i].currentLocation.yPos] = MONSTER_POS;
+		grid[monster[i].currentLocation.getX()][monster[i].currentLocation.getY()] = MONSTER_POS;
 	}
 
-	grid[player1.currentLocation.xPos][player1.currentLocation.yPos] = PLAYER_POS;
+	grid[player1.currentLocation.getX()][player1.currentLocation.getY()] = PLAYER_POS;
 	char option;
 	int success;
 	bool dead = false;
@@ -67,7 +67,7 @@ int main()
 	{
 
 
-		printf("\nPlayer is in position (%d,%d)", player1.currentLocation.xPos, player1.currentLocation.yPos);
+		printf("\nPlayer is in position (%d,%d)", player1.currentLocation.getX(), player1.currentLocation.getY());
 		for (int i = 0; i < numMonsters; i++)
 		{
 
@@ -75,9 +75,9 @@ int main()
 			for (int j = 0; j < numMonsters; j++)
 			{
 				if (i != j) {
-					if (monster[i].currentLocation.xPos == monster[j].currentLocation.xPos)
+					if (monster[i].currentLocation.getX() == monster[j].currentLocation.getX())
 					{
-						if (monster[i].currentLocation.xPos == monster[j].currentLocation.xPos)
+						if (monster[i].currentLocation.getX() == monster[j].currentLocation.getX())
 							monsterTracker[i] = 0;
 						monsterCount--;
 					}
@@ -90,7 +90,7 @@ int main()
 				exit(0);
 			}
 			if (monsterTracker[i]) {
-				printf("\nMonster %d is in position (%d,%d)", i + 1, monster[i].currentLocation.xPos, monster[i].currentLocation.yPos);
+				printf("\nMonster %d is in position (%d,%d)", i + 1, monster[i].currentLocation.getX(), monster[i].currentLocation.getY());
 
 				dead = monster[i].areYouFoodYet(player1.currentLocation);
 				monster[i].moveMonster();
