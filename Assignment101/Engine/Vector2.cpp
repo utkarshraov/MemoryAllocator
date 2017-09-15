@@ -3,40 +3,42 @@
 
 namespace Engine
 {
-	class Vector2 {
-		int xPosition;
-		int yPosition;
 
-	public:
-		int getX() {
+		int Vector2::getX() const{
 			return xPosition;
 		}
 
-		int getY() {
+		int Vector2::getY() const{
 			return yPosition;
 		}
 
-		void setX(int value)
+		void Vector2::setX(int value)
 		{
 			xPosition = value;
 		}
 
-		void setY(int value)
+		void Vector2::setY(int value)
 		{
 			yPosition = value;
 		}
 
-		Vector2(int xValue, int yValue) {
+		Vector2::Vector2(int xValue, int yValue) 
+		{
 			xPosition = xValue;
 			yPosition = yValue;
 		}
-		Vector2() {};
+
+		Vector2::Vector2() {};
+		
 
 
 	
-	};
-	Vector2 operator +(Vector2 const &lhs, Vector2 const &rhs)
-	{
-		return(Vector2(lhs.getX() + rhs.getX(), lhs.getY() + rhs.getY()));
+	
+	Vector2 operator+(Vector2 const &lhs, Vector2 const &rhs)
+	{	
+		Vector2 temp;
+		temp.setX(lhs.getX() + rhs.getX());
+		temp.setY(lhs.getY() + rhs.getY());
+		return  temp;
 	}
 }
