@@ -8,7 +8,7 @@ public:
 	Vector2 currentLocation;
 	char playerName[15];
 	Player();
-	int updateLocation(char);
+	void updateLocation(char);
 	void setPosition(Vector2);
 
 };

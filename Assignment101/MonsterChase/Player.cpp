@@ -1,6 +1,15 @@
 #include "Player.h"
 #include "Vector2.h"
 #include<stdlib.h>
+#include "DebugStatement.h"
+#include<stdio.h>
+
+#if defined (_DEBUG) && !defined (DISABLE_DEBUG_PRINT)
+#define DEBUG_PRINT(fmt,...) Engine::ConsolePrint((fmt),__VA_ARGS__)
+#define EMIT_LOCATION() DEBUG_PRINT("File: %s Line: %d\n",__FILE__,__LINE__)
+#else
+#define DEBUG_PRINT(fmt,...) void(0)
+#endif
 
 using namespace Engine;
 
@@ -11,9 +20,8 @@ using namespace Engine;
 		Player::currentLocation.setX(rand() % 50);
 		Player::currentLocation.setY(rand() % 50);
 	}
-	int Player::updateLocation(char choice)
+	void Player::updateLocation(char choice)
 	{
-		int success = 0;
 		switch (choice)
 		{
 		case 'a': Player::currentLocation.setX(Player::currentLocation.getX() + 1);
@@ -25,7 +33,12 @@ using namespace Engine;
 			break;
 		case 's': Player::currentLocation.setX(Player::currentLocation.getY() - 1);
 			break;
-		default: success = 1;
+		case 'q':
+			exit(0);
+
+		default: DEBUG_PRINT("Wrong option entered");
+			EMIT_LOCATION();
+			printf("\nINvalid option\n");
 			break;
 		}
 		if(Player::currentLocation.getX() > 49)
@@ -36,7 +49,6 @@ using namespace Engine;
 			Player::currentLocation.setY(49);
 		if (Player::currentLocation.getY() <0)
 			Player::currentLocation.setY(0);
-		return success;
 	}
 
 	void Player::setPosition(Vector2 position) {

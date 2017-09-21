@@ -29,6 +29,13 @@ namespace Engine
 		}
 
 		Vector2::Vector2() {};
+
+		bool Vector2::checkEqual(Vector2 value)
+		{
+			if (xPosition == value.xPosition && yPosition == value.yPosition)
+				return true;
+			return false;
+		}
 		
 
 
@@ -41,4 +48,5 @@ namespace Engine
 		temp.setY(lhs.getY() + rhs.getY());
 		return  temp;
 	}
+
 }

@@ -1,5 +1,3 @@
-// ConsoleApplication2.cpp : Defines the entry point for the console application.
-//
 
 #include<stdio.h>
 #include<conio.h>
@@ -11,6 +9,13 @@
 #include "DebugStatement.h"
 #define PLAYER_POS 1
 #define MONSTER_POS  2
+
+#if defined (_DEBUG) && !defined (DISABLE_DEBUG_PRINT)
+#define DEBUG_PRINT(fmt,...) Engine::ConsolePrint((fmt),__VA_ARGS__)
+#define EMIT_LOCATION() DEBUG_PRINT("File: %s Line: %d\n",__FILE__,__LINE__)
+#else
+#define DEBUG_PRINT(fmt,...) void(0)
+#endif
 
 
 
@@ -101,16 +106,12 @@ int main()
 		}
 
 		printf("\nEnter a direction(WASD) or press Q to exit:\n");
-		//scanf_s("%c", &option, 1);
-		//fgets(a, 15, stdin);
 		option = _getch();
-		Engine::ConsolePrint("something happened");
+		DEBUG_PRINT("something happened");
+		EMIT_LOCATION();
 
-		success = player1.updateLocation(option);
-		if (success)
-		{
-			printf("\nThe option you entered does not do anything.\n");
-		}
+		player1.updateLocation(option);
+		
 	}
 
 	fgets(a, 15, stdin);
