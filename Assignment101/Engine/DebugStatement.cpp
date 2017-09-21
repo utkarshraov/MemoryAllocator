@@ -6,33 +6,33 @@
 namespace Engine
 {
 
-	void ConsolePrint(const char * i_fmt, ...)
+	void ConsolePrint(const char * statement, ...)
 	{
-		assert(i_fmt);
+		assert(statement);
 
-		const size_t lenTemp = 256;
-		char strTemp[lenTemp] = "DEBUG: ";
+		const size_t tempLength = 256;
+		char tempString[tempLength] = "DEBUG: ";
 
-		strcat_s(strTemp, i_fmt);
+		strcat_s(strTemp, statement);
 		strcat_s(strTemp, "\n");
 
-		const size_t lenOutput = lenTemp + 32;
+		const size_t outputLength = tempLength + 32;
 
-		char strOutput[lenOutput];
+		char outputString[outputLength];
 
 		// define a variable argument list variable 
-		va_list args;
+		va_list arguments;
 
 		// initialize it. second parameter is variable immediately
 		// preceeding variable arguments
-		va_start(args, i_fmt);
+		va_start(arguments, statement);
 
 		// (safely) print our formatted string to a char buffer
-		vsprintf_s(strOutput, lenOutput, strTemp, args);
+		vsprintf_s(outputString, outputLength, tempString, arguments);
 
-		va_end(args);
+		va_end(arguments);
 
-		OutputDebugStringA(strOutput);
+		OutputDebugStringA(outputString);
 	}
 
 }
