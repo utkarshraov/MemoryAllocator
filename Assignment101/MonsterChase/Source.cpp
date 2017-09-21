@@ -8,14 +8,11 @@
 #include "Monster.h"
 #include "Player.h"
 #include "Vector2.h"
+#include "DebugStatement.h"
 #define PLAYER_POS 1
 #define MONSTER_POS  2
 
-class coordinate {
-public:
-	int xPos;
-	int yPos;
-};
+
 
 
 
@@ -104,26 +101,12 @@ int main()
 		}
 
 		printf("\nEnter a direction(WASD) or press Q to exit:\n");
-		scanf_s("%c", &option, 1);
-		fgets(a, 15, stdin);
+		//scanf_s("%c", &option, 1);
+		//fgets(a, 15, stdin);
+		option = _getch();
+		Engine::ConsolePrint("something happened");
 
-		switch (option)
-		{
-		case 'w':
-		case 'W': success = player1.updateLocation('w');
-			break;
-		case 'a':
-		case 'A': success = player1.updateLocation('a');
-			break;
-		case 's':
-		case 'S': success = player1.updateLocation('s');
-			break;
-		case 'd':
-		case 'D': success = player1.updateLocation('d');
-			break;
-		case 'q':
-		case 'Q': exit(0);
-		}
+		success = player1.updateLocation(option);
 		if (success)
 		{
 			printf("\nThe option you entered does not do anything.\n");
