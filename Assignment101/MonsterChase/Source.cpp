@@ -7,17 +7,9 @@
 #include "Player.h"
 #include "Vector2.h"
 #include "DebugStatement.h"
-#define PLAYER_POS 1
-#define MONSTER_POS  2
 
-#if defined (_DEBUG) && !defined (DISABLE_DEBUG_PRINT)
-#define DEBUG_PRINT(fmt,...) Engine::ConsolePrint((fmt),__VA_ARGS__)
-#define EMIT_LOCATION() DEBUG_PRINT("File: %s Line: %d\n",__FILE__,__LINE__)
-#else
-#define DEBUG_PRINT(fmt,...) void(0)
-#endif
-
-
+#define MONSTER_POS 1
+#define PLAYER_POS 2
 
 
 

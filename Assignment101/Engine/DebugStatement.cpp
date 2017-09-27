@@ -3,6 +3,7 @@
 #include <stdio.h>		// for vsprintf_s()
 #include <Windows.h>	// for OutputDebugStringA(). Uggh.. this pulls in a lot of Windows specific stuff
 
+
 namespace Engine
 {
 
@@ -13,8 +14,8 @@ namespace Engine
 		const size_t tempLength = 256;
 		char tempString[tempLength] = "DEBUG: ";
 
-		strcat_s(strTemp, statement);
-		strcat_s(strTemp, "\n");
+		strcat_s(tempString, statement);
+		strcat_s(tempString, "\n");
 
 		const size_t outputLength = tempLength + 32;
 
