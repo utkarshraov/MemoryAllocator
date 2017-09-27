@@ -11,7 +11,7 @@
 #define MONSTER_POS 1
 #define PLAYER_POS 2
 
-
+//main game program
 
 
 int main()
