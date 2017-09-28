@@ -33,6 +33,12 @@
     <ClInclude Include="DebugStatement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BlockDescriptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine-init.cpp">
@@ -42,6 +48,9 @@
       <Filter>Source Files\Math</Filter>
     </ClCompile>
     <ClCompile Include="DebugStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryAllocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
