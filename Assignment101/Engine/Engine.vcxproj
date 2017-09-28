@@ -91,7 +91,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>$(AvailablePlatforms)WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -152,12 +152,14 @@
     <ClInclude Include="BlockDescriptor.h" />
     <ClInclude Include="DebugStatement.h" />
     <ClInclude Include="Engine-init.h" />
+    <ClInclude Include="LinkedListBD.h" />
     <ClInclude Include="MemoryAllocator.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DebugStatement.cpp" />
     <ClCompile Include="Engine-init.cpp" />
+    <ClCompile Include="LinkedListBD.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
