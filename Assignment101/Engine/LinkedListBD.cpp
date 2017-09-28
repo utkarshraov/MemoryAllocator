@@ -36,5 +36,8 @@ bool LinkedListBD::removeBD(BlockDescriptor toRemove) {
 
 BlockDescriptor LinkedListBD::getAvailableBlock(size_t blockSize)
 {
-
+	BlockDescriptor returnBD;
+	returnBD.address = head;
+	returnBD.size = 64;
+	return returnBD;
 }

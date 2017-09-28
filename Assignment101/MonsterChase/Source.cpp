@@ -13,7 +13,6 @@
 
 //main game program
 
-
 int main()
 {
 	int grid[50][50], numMonsters, monsterTracker[10], monsterCount = 0;;
