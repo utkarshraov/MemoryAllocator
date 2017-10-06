@@ -7,18 +7,59 @@ LinkedListBD::LinkedListBD()
 	head = nullptr;
 }
 
-bool LinkedListBD::insertBD(BlockDescriptor toInsert) {
+bool LinkedListBD::insertBD(BlockDescriptor &toInsert) {
 	LinkedListBD::node * tempNode = new LinkedListBD::node();
 	tempNode->next = head;
 	tempNode->bd = toInsert;
 	head = tempNode;
 	return true;
 }
-bool LinkedListBD::removeBD(BlockDescriptor toRemove) {
+
+bool LinkedListBD::orderedInsertBD(BlockDescriptor &toInsert) {
 	LinkedListBD::node * currentNode = new LinkedListBD::node();
 	LinkedListBD::node * previousNode = new LinkedListBD::node();
 	currentNode = head;
 	previousNode = nullptr;
+	if (head == nullptr)
+	{
+		DEBUG_PRINT("ordered insert at head");
+		head->bd = toInsert;
+		head->next = nullptr;
+		return true;
+	}
+	while (currentNode != nullptr)
+	{
+		if (toInsert.address < currentNode->bd.address)
+		{
+			if (currentNode == head)
+			{
+				DEBUG_PRINT("ordered insert before head");
+				head->bd = toInsert;
+				head->next = currentNode;
+				return true;
+			}
+			DEBUG_PRINT("inserted in between something");
+			LinkedListBD::node * tempNode = new LinkedListBD::node();
+			tempNode->bd = toInsert;
+			tempNode->next = currentNode;
+			previousNode->next = tempNode;
+			return true;
+		}
+		previousNode = currentNode;
+		currentNode = currentNode->next;
+	}
+	LinkedListBD::node * tempNode = new LinkedListBD::node();
+	tempNode->bd = toInsert;
+	tempNode->next = currentNode;
+	previousNode->next = tempNode;
+	DEBUG_PRINT("ordered insert at end of free");
+	return true;
+
+}
+bool LinkedListBD::removeBD(BlockDescriptor toRemove) {
+	LinkedListBD::node * currentNode = new LinkedListBD::node();
+	LinkedListBD::node * previousNode = new LinkedListBD::node();
+	currentNode = head;
 	while (currentNode->next != nullptr) {
 		
 		if (currentNode->bd.address == toRemove.address) {

@@ -66,7 +66,7 @@
 		temp.address = (unsigned char*)toDivide.address + size;
 		temp.size = toDivide.size - size;
 		toDivide.size = size;
-		freeBlocks.insertBD(temp);
+		freeBlocks.orderedInsertBD(temp);
 		DEBUG_PRINT("divide method called");
 	}
 
@@ -83,8 +83,9 @@
 			{
 			
 				previous->next = current->next;
-				freeBlocks.insertBD(current->bd);
+				freeBlocks.orderedInsertBD(current->bd);
 				DEBUG_PRINT("succesful free");
+				current = current->next;
 			}
 			else
 			{
@@ -93,7 +94,6 @@
 				current = current->next;
 			}
 		}
-		DEBUG_PRINT("You are freeing something wrong");
 	}
 
 
