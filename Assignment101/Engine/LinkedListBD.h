@@ -5,7 +5,7 @@ class LinkedListBD {
 public:
 	
 	struct node{
-		void * next;
+		node * next;
 		BlockDescriptor bd;
 	};
 
@@ -13,5 +13,6 @@ public:
 	LinkedListBD();
 	bool insertBD(BlockDescriptor toInsert);
 	bool removeBD(BlockDescriptor toRemove);
-	BlockDescriptor getAvailableBlock(size_t blockSize);
+	bool getAvailableBlock(size_t blockSize,BlockDescriptor & availableBD);
+	BlockDescriptor getBlock();
 };

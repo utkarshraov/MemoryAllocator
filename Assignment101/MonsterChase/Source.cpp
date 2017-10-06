@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Vector2.h"
 #include "DebugStatement.h"
+#include "MemoryAllocator.h"
 
 #define MONSTER_POS 1
 #define PLAYER_POS 2
@@ -15,7 +16,7 @@
 
 int main()
 {
-	int grid[50][50], numMonsters, monsterTracker[10], monsterCount = 0;;
+	/*int grid[50][50], numMonsters, monsterTracker[10], monsterCount = 0;;
 	char a[15];
 	Monster monster[10];
 	Player player1;
@@ -107,6 +108,11 @@ int main()
 
 	fgets(a, 15, stdin);
 
+	*/
+	
 
+	MemoryAllocator mem = MemoryAllocator(2048);
+	void * temp = mem.alloc(64);
+	mem.dealloc(temp);
 }
 

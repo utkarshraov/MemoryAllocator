@@ -1,10 +1,10 @@
 #include "LinkedListBD.h"
 #include "BlockDescriptor.h"
+#include "DebugStatement.h"
 
 LinkedListBD::LinkedListBD()
 {
-	head=nullptr;
-	head->next = nullptr;
+	head = nullptr;
 }
 
 bool LinkedListBD::insertBD(BlockDescriptor toInsert) {
@@ -34,10 +34,37 @@ bool LinkedListBD::removeBD(BlockDescriptor toRemove) {
 	return false;
 }
 
-BlockDescriptor LinkedListBD::getAvailableBlock(size_t blockSize)
+bool LinkedListBD::getAvailableBlock(size_t blockSize,BlockDescriptor & availableBD)
 {
-	BlockDescriptor returnBD;
-	returnBD.address = head;
-	returnBD.size = 64;
-	return returnBD;
+	LinkedListBD::node* current = new LinkedListBD::node();
+	current = head;
+	while (current != nullptr)
+	{
+		if (current->bd.size > blockSize)
+		{
+			availableBD.address = current->bd.address;
+			availableBD.size = current->bd.size;
+			return true;
+		}
+		else
+			current = current->next;
+
+	}
+	DEBUG_PRINT("no available block, garbage collection");
+	return false;
+}
+
+BlockDescriptor LinkedListBD::getBlock()
+{
+	if (head != nullptr)
+	{
+		BlockDescriptor temp = head->bd;
+		head = head->next;
+		return temp;
+	}
+	else
+	{
+		DEBUG_PRINT("no available block descriptors");
+		return head->bd;
+	}
 }
