@@ -112,7 +112,21 @@ int main()
 	
 
 	MemoryAllocator mem = MemoryAllocator(2048);
-	void * temp = mem.alloc(64);
-	mem.dealloc(temp);
+	mem.printAllBlocks(mem.freeBlocks);
+	void * temp1 = mem.alloc(64);
+	mem.printAllBlocks(mem.freeBlocks);
+	void * temp2 = mem.alloc(32);
+	void * temp3 = mem.alloc(128);
+	void * temp4 = mem.alloc(32);
+	//mem.printAllBlocks(mem.freeBlocks);
+	//mem.printAllBlocks(mem.usedBlocks);
+	//mem.printAllBlocks(mem.usedBlocks);
+
+	mem.dealloc(temp1);
+	mem.dealloc(temp4);
+	mem.dealloc(temp2);
+	mem.dealloc(temp3);
+	mem.garbageCollection();
+	
 }
 

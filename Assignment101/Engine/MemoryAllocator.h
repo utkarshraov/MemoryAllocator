@@ -17,6 +17,10 @@ public:
 
 	void divide(BlockDescriptor & toDivide, size_t size);
 
-	void dealloc(void * pointer);
+	bool dealloc(void * pointer);
+
+	bool garbageCollection();
+
+	void printAllBlocks(LinkedListBD list);
 
 };

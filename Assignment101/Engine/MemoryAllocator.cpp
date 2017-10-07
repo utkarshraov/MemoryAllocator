@@ -51,10 +51,14 @@
 			}
 			usedBlocks.insertBD(tempBD);
 			freeBlocks.removeBD(tempBD);
+			heap.size -= blockSize;
+			assert(garbageCollection());
 			return tempBD.address;
 		}
 		else
 		{
+			//assert(garbageCollection());
+
 			DEBUG_PRINT("There was no memory you idiot");
 			return nullptr;
 		}
@@ -70,7 +74,7 @@
 		DEBUG_PRINT("divide method called");
 	}
 
-	void MemoryAllocator::dealloc(void * pointer)
+	bool MemoryAllocator::dealloc(void * pointer)
 	{
 		LinkedListBD::node *current = new LinkedListBD::node();
 		current = usedBlocks.head;
@@ -83,9 +87,12 @@
 			{
 			
 				previous->next = current->next;
+				heap.size += current->bd.size;
 				freeBlocks.orderedInsertBD(current->bd);
 				DEBUG_PRINT("succesful free");
 				current = current->next;
+				
+				return true;
 			}
 			else
 			{
@@ -94,6 +101,38 @@
 				current = current->next;
 			}
 		}
+		return false;
 	}
 
+	bool MemoryAllocator::garbageCollection()
+	{
+		DEBUG_PRINT("garbage collection started");
+		LinkedListBD::node * currentNode = new LinkedListBD::node();
+		LinkedListBD::node * previousNode = new LinkedListBD::node();
+		currentNode = freeBlocks.head;
+		while (currentNode->next != nullptr)
+		{
+			previousNode = currentNode;
+			currentNode = currentNode->next;
+			if ((unsigned char *)previousNode->bd.address + previousNode->bd.size == (unsigned char*)currentNode->bd.address)
+			{
+				DEBUG_PRINT("combined something");
+				previousNode->bd.size += currentNode->bd.size;
+				previousNode->next = currentNode->next;
+				blockDescriptors.insertBD(currentNode->bd);
+			}
+		}
+		DEBUG_PRINT("Garbage collection completed");
+		return true;
+	}
 
+	void MemoryAllocator::printAllBlocks(LinkedListBD list)
+	{
+		LinkedListBD::node * currentNode = new LinkedListBD::node();
+		currentNode = list.head;
+		while (currentNode != nullptr)
+		{
+			DEBUG_PRINT("address and size");
+			currentNode = currentNode->next;
+		}
+	}
