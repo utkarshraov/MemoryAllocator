@@ -95,17 +95,16 @@ bool LinkedListBD::getAvailableBlock(size_t blockSize,BlockDescriptor & availabl
 	return false;
 }
 
-BlockDescriptor LinkedListBD::getBlock()
+void LinkedListBD::getBlock(BlockDescriptor &temp)
 {
 	if (head != nullptr)
 	{
-		BlockDescriptor temp = head->bd;
+		temp = head->bd;
 		head = head->next;
-		return temp;
+		DEBUG_PRINT(" GETBLOCK address %d and size %d", temp.address, temp.size);
 	}
 	else
 	{
 		DEBUG_PRINT("no available block descriptors");
-		return head->bd;
 	}
 }

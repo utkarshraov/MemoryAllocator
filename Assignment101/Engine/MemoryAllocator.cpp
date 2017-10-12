@@ -13,6 +13,7 @@
 	MemoryAllocator:: MemoryAllocator(size_t heapSize) {
 		heap.address = _aligned_malloc(heapSize,4);
 		heap.size = heapSize;
+		int j = 50;
 		DEBUG_PRINT("i am in init!");
 		
 		int numBlocks = 30;
@@ -31,7 +32,8 @@
 			DEBUG_PRINT("Assigning block descriptors");
 		}
 		heap.size -= (size_t)(30 * sizeof(BlockDescriptor));
-		BlockDescriptor newHeap = blockDescriptors.getBlock();
+		BlockDescriptor newHeap;
+		blockDescriptors.getBlock(newHeap);
 		newHeap.address = heap.address;
 		newHeap.size = heap.size;
 		freeBlocks.insertBD(newHeap);
@@ -43,16 +45,21 @@
 		DEBUG_PRINT("I am in alloc");
 		if (blockSize < heap.size) {
 			DEBUG_PRINT("IT FITS");
-			BlockDescriptor tempBD = blockDescriptors.getBlock();
+			BlockDescriptor tempBD;
+			blockDescriptors.getBlock(tempBD);
 			assert(freeBlocks.getAvailableBlock(blockSize,tempBD));
+			DEBUG_PRINT("tempBD address = %d size = %d", tempBD.address,tempBD.size);
 			if (tempBD.size - blockSize > 16)
 			{
 				divide(tempBD, blockSize);
+				heap.size -= blockSize;
 			}
-			usedBlocks.insertBD(tempBD);
-			freeBlocks.removeBD(tempBD);
-			heap.size -= blockSize;
-			assert(garbageCollection());
+			else { 
+				usedBlocks.insertBD(tempBD); 
+				freeBlocks.removeBD(tempBD);
+				heap.size -= tempBD.size;
+			}
+			//assert(garbageCollection());
 			return tempBD.address;
 		}
 		else
@@ -66,11 +73,12 @@
 
 	void MemoryAllocator::divide(BlockDescriptor & toDivide, size_t size)
 	{
-		BlockDescriptor temp = blockDescriptors.getBlock();
-		temp.address = (unsigned char*)toDivide.address + size;
-		temp.size = toDivide.size - size;
-		toDivide.size = size;
-		freeBlocks.orderedInsertBD(temp);
+		BlockDescriptor  temp;
+		blockDescriptors.getBlock(temp);
+		temp.address = (unsigned char*)toDivide.address + toDivide.size - size;
+		temp.size = size;
+		toDivide.size -= size;
+		usedBlocks.insertBD(temp);
 		DEBUG_PRINT("divide method called");
 	}
 
@@ -132,7 +140,7 @@
 		currentNode = list.head;
 		while (currentNode != nullptr)
 		{
-			DEBUG_PRINT("address and size");
+			DEBUG_PRINT("address %d and size %d",currentNode->bd.address,currentNode->bd.size);
 			currentNode = currentNode->next;
 		}
 	}
