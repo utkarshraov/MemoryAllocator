@@ -101,7 +101,6 @@ void LinkedListBD::getBlock(BlockDescriptor &temp)
 	{
 		temp = head->bd;
 		head = head->next;
-		DEBUG_PRINT(" GETBLOCK address %d and size %d", temp.address, temp.size);
 	}
 	else
 	{

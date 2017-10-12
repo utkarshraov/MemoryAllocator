@@ -22,7 +22,6 @@
 		BlockDescriptor tempBD;
 		tempBD.size = 0;
 		tempBD.address = temp;
-		DEBUG_PRINT("TEMP VAR ASSIGNED");
 		
 		for (int i = 0; i < numBlocks; i++)
 		{
@@ -36,7 +35,7 @@
 		blockDescriptors.getBlock(newHeap);
 		newHeap.address = heap.address;
 		newHeap.size = heap.size;
-		freeBlocks.insertBD(newHeap);
+		freeBlocks.insertBD(heap);
 		DEBUG_PRINT("init ended");
 	}
 
@@ -48,10 +47,13 @@
 			BlockDescriptor tempBD;
 			blockDescriptors.getBlock(tempBD);
 			assert(freeBlocks.getAvailableBlock(blockSize,tempBD));
-			DEBUG_PRINT("tempBD address = %d size = %d", tempBD.address,tempBD.size);
 			if (tempBD.size - blockSize > 16)
 			{
 				divide(tempBD, blockSize);
+				DEBUG_PRINT("size before = %d address = %d heap address = %d", tempBD.size,&tempBD,&heap);
+				tempBD.size -= blockSize;
+				DEBUG_PRINT("size after = %daddress = %d heap address = %d", tempBD.size,&tempBD,&heap);
+				
 				heap.size -= blockSize;
 			}
 			else { 
@@ -77,7 +79,6 @@
 		blockDescriptors.getBlock(temp);
 		temp.address = (unsigned char*)toDivide.address + toDivide.size - size;
 		temp.size = size;
-		toDivide.size -= size;
 		usedBlocks.insertBD(temp);
 		DEBUG_PRINT("divide method called");
 	}
