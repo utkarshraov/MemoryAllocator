@@ -1,147 +1,435 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include "BlockDescriptor.h"
-#include "LinkedListBD.h"
 #include "DebugStatement.h"
 #include "MemoryAllocator.h"
 #include<assert.h>
 
-	BlockDescriptor heap;
-	LinkedListBD blockDescriptors;
-	LinkedListBD freeBlocks;
-	LinkedListBD usedBlocks;
-	MemoryAllocator:: MemoryAllocator(size_t heapSize) {
-		heap.address = _aligned_malloc(heapSize,4);
-		heap.size = heapSize;
-		int j = 50;
-		DEBUG_PRINT("i am in init!");
-		
-		int numBlocks = 30;
-		void * temp;
-		temp = (unsigned char*)heap.address + heapSize - (30 * sizeof(BlockDescriptor));
-		BlockDescriptor tempBD;
-		tempBD.size = 0;
-		tempBD.address = temp;
-		
-		for (int i = 0; i < numBlocks; i++)
+#define DEFAULT_ALIGNMENT 4
+
+MemoryAllocator::MemoryAllocator(void * memPointer, size_t heapSize, unsigned int numDescriptors)
+{
+	DEBUG_PRINT("constructor called");
+	heapFront = _aligned_malloc(heapSize, DEFAULT_ALIGNMENT);
+	assert(heapFront != NULL);
+
+	heapRemaining = heapSize;
+	heapBack = reinterpret_cast<unsigned char*>(heapFront) + heapSize;
+
+	setDescriptors(numDescriptors);
+	DEBUG_PRINT("constructor completed");
+}
+
+MemoryAllocator * MemoryAllocator::makeHeap(void * memPointer, size_t heapSize, unsigned int numDescriptors)
+{
+	DEBUG_PRINT("make heap function");
+	return new MemoryAllocator(memPointer, heapSize, numDescriptors);
+}
+
+void MemoryAllocator::setDescriptors(const unsigned int numDescriptors)
+{
+	BlockDescriptor * tempBD = reinterpret_cast<BlockDescriptor*>(reinterpret_cast<unsigned char*>(heapBack) - (sizeof(BlockDescriptor) * numDescriptors));
+	DEBUG_PRINT("init block descroiptor list");
+	assert(tempBD > heapFront);
+
+	tempBD->previous = NULL;
+	tempBD->baseAddress = NULL;
+	tempBD->accessAddress = NULL;
+	tempBD->size = 0;
+	tempBD->next = NULL;
+
+	BlockDescriptor * temp = tempBD;
+
+	for (size_t i = 0; i < numDescriptors - 1; i++);
+	{
+		BlockDescriptor * insert = temp + 1;
+
+		insert->previous = temp;
+		insert->next = NULL;
+		insert->baseAddress = NULL;
+		insert->accessAddress = NULL;
+		insert->size = 0;
+		temp = insert;
+	}
+	blockDescriptors = tempBD;
+	heapRemaining -= sizeof(BlockDescriptor) * numDescriptors;
+	BlockDescriptor * firstFree;
+	firstFree = blockDescriptors;
+	blockDescriptors = blockDescriptors->next;
+	firstFree->previous = NULL;
+	firstFree->next = NULL;
+	firstFree->baseAddress = heapFront;
+	firstFree->accessAddress = NULL;
+	firstFree->size = heapRemaining;
+	DEBUG_PRINT("put one in free");
+	insertToFree(firstFree);
+	DEBUG_PRINT("list complete and free list initialised with heap");
+}
+
+void MemoryAllocator::insertToFree(BlockDescriptor * toInsert)
+{
+	BlockDescriptor * tempBD = blockDescriptors;
+	DEBUG_PRINT("inserting to free");
+
+	if (blockDescriptors == 0)
+	{
+		DEBUG_PRINT("FIRST TIME");
+		blockDescriptors = toInsert;
+		blockDescriptors->previous = NULL;
+		blockDescriptors->next = NULL;
+	}
+	else
+	{
+		DEBUG_PRINT("NOT FIRST TIME");
+		while (tempBD->next != NULL)
 		{
-			blockDescriptors.insertBD(tempBD);
-			tempBD.address = (unsigned char*)tempBD.address + sizeof(BlockDescriptor);
-			tempBD.size = 0;
-			DEBUG_PRINT("Assigning block descriptors");
+			tempBD = tempBD->next;
 		}
-		heap.size -= (size_t)(30 * sizeof(BlockDescriptor));
-		BlockDescriptor newHeap;
-		blockDescriptors.getBlock(newHeap);
-		newHeap.address = heap.address;
-		newHeap.size = heap.size;
-		freeBlocks.insertBD(heap);
-		DEBUG_PRINT("init ended");
+		tempBD->next = toInsert;
+		toInsert->previous = tempBD;
+	}
+}
+
+void MemoryAllocator::insertToUnused(BlockDescriptor * toInsert)
+{
+	DEBUG_PRINT("insert to BD list");
+	toInsert->baseAddress = NULL;
+	toInsert->accessAddress = NULL;
+	toInsert->size = NULL;
+	toInsert->next = NULL;
+	toInsert->previous = NULL;
+
+	if (blockDescriptors == NULL)
+	{
+		blockDescriptors = toInsert;
+		blockDescriptors->previous = NULL;
+	}
+	else
+	{
+		toInsert->next = blockDescriptors;
+		blockDescriptors->previous = toInsert;
+		blockDescriptors = toInsert;
+	}
+}
+
+void MemoryAllocator::insertToUsed(BlockDescriptor * toInsert)
+{
+	DEBUG_PRINT("inserting to used");
+
+	BlockDescriptor * tempBD = usedBlocks;
+
+	if (usedBlocks == 0)
+	{
+		DEBUG_PRINT("used was empty");
+		toInsert->previous = NULL;
+		toInsert->next = NULL;
+		usedBlocks = toInsert;
+	}
+	else
+	{
+		while (tempBD->next != NULL)
+		{
+			tempBD = tempBD->next;
+		}
+		tempBD->next = toInsert;
+		toInsert->previous = tempBD;
+	}
+}
+
+void * MemoryAllocator::alloc(const size_t blockSize)
+{
+	return alloc(blockSize, DEFAULT_ALIGNMENT);
+}
+
+void * MemoryAllocator::alloc(size_t blockSize, unsigned int alignmentValue)
+{
+	DEBUG_PRINT("alloc %d", blockSize);
+
+	if (freeBlocks == NULL)
+	{
+		DEBUG_PRINT("no free blocks");
+		return nullptr;
+	}
+	BlockDescriptor * tempBD = findFreeBlock(blockSize);
+
+	if (tempBD == NULL) 
+	{
+		DEBUG_PRINT("no free block big enough");
+		return nullptr;
 	}
 
-	void * MemoryAllocator::alloc(size_t blockSize)
+	BlockDescriptor * dividedBlock = divideBlock(tempBD, blockSize, alignmentValue);
+
+	dividedBlock->size = blockSize;
+
+	insertToUsed(dividedBlock);
+	return dividedBlock->baseAddress;
+}
+
+
+
+BlockDescriptor * MemoryAllocator::findFreeBlock(const size_t blockSize) const
+{
+	DEBUG_PRINT("finding big enough free block");
+	BlockDescriptor * tempBD = freeBlocks;
+	size_t reqSize = blockSize;
+	while (tempBD != NULL)
 	{
-		DEBUG_PRINT("I am in alloc");
-		if (blockSize < heap.size) {
-			DEBUG_PRINT("IT FITS");
-			BlockDescriptor tempBD;
-			blockDescriptors.getBlock(tempBD);
-			assert(freeBlocks.getAvailableBlock(blockSize,tempBD));
-			if (tempBD.size - blockSize > 16)
-			{
-				divide(tempBD, blockSize);
-				DEBUG_PRINT("size before = %d address = %d heap address = %d", tempBD.size,&tempBD,&heap);
-				tempBD.size -= blockSize;
-				DEBUG_PRINT("size after = %daddress = %d heap address = %d", tempBD.size,&tempBD,&heap);
-				
-				heap.size -= blockSize;
-			}
-			else { 
-				usedBlocks.insertBD(tempBD); 
-				freeBlocks.removeBD(tempBD);
-				heap.size -= tempBD.size;
-			}
-			//assert(garbageCollection());
-			return tempBD.address;
+		if (tempBD->size >= reqSize)
+		{
+			DEBUG_PRINT("found!");
+			return tempBD;
 		}
 		else
 		{
-			//assert(garbageCollection());
-
-			DEBUG_PRINT("There was no memory you idiot");
-			return nullptr;
+			tempBD = tempBD->next;
 		}
+
 	}
+	DEBUG_PRINT("not found:(");
+	return NULL;
+}
 
-	void MemoryAllocator::divide(BlockDescriptor & toDivide, size_t size)
+BlockDescriptor * MemoryAllocator::divideBlock(BlockDescriptor * toDivide, const size_t blockSize, const unsigned int alignmentValue)
+{
+	DEBUG_PRINT("dividing bigger block");
+	BlockDescriptor * tempBD = blockDescriptors;
+	blockDescriptors = blockDescriptors->next;
+
+	tempBD->next = NULL;
+	tempBD->previous = NULL;
+
+	tempBD->baseAddress = toDivide->baseAddress;
+	heapRemaining -= blockSize;
+
+	tempBD->size = blockSize;
+
+	toDivide->size -= blockSize;
+	toDivide->baseAddress = static_cast<unsigned char*>(toDivide->baseAddress) + tempBD->size;
+
+	if (toDivide->size == 0)
 	{
-		BlockDescriptor  temp;
-		blockDescriptors.getBlock(temp);
-		temp.address = (unsigned char*)toDivide.address + toDivide.size - size;
-		temp.size = size;
-		usedBlocks.insertBD(temp);
-		DEBUG_PRINT("divide method called");
+		DEBUG_PRINT("the block was EXACTLY the right size wew");
+		removeBlock(toDivide, freeBlocks);
+		insertToUnused(toDivide);
 	}
+	return tempBD;
+}
 
-	bool MemoryAllocator::dealloc(void * pointer)
+BlockDescriptor * MemoryAllocator::removeBlock(const void * address, BlockDescriptor * listName)
+{
+	DEBUG_PRINT("removing from list");
+
+	BlockDescriptor * tempBD = listName;
+
+	while (tempBD != NULL)
 	{
-		LinkedListBD::node *current = new LinkedListBD::node();
-		current = usedBlocks.head;
-		LinkedListBD::node *previous = new LinkedListBD::node();
-
-		DEBUG_PRINT("dealloc started");
-		while (current != nullptr)
+		if (tempBD->baseAddress == address)
 		{
-			if (current->bd.address == pointer)
+			DEBUG_PRINT("FOUND");
+			if (tempBD->previous->previous == NULL && tempBD->next == NULL)
 			{
-			
-				previous->next = current->next;
-				heap.size += current->bd.size;
-				freeBlocks.orderedInsertBD(current->bd);
-				DEBUG_PRINT("succesful free");
-				current = current->next;
-				
-				return true;
+				if (tempBD == freeBlocks)
+				{
+					freeBlocks = tempBD->next;
+				}
+				else if (tempBD == blockDescriptors)
+				{
+					blockDescriptors = tempBD->next;
+				}
+				else if (tempBD == usedBlocks)
+				{
+					usedBlocks = tempBD->next;
+				}
+
+				tempBD->next->previous = NULL;
+				tempBD->next = NULL;
 			}
-			else
+			else if (tempBD->previous != NULL && tempBD->next != NULL)
 			{
-				DEBUG_PRINT("iterate through LL");
-				previous = current;
-				current = current->next;
+				tempBD->next->previous = tempBD->previous;
+				tempBD->previous->next = tempBD->next;
+
+				tempBD->next = NULL;
+				tempBD->previous = NULL;
 			}
+			else if (tempBD->previous != NULL && tempBD->next == NULL)
+			{
+				tempBD->previous->next = NULL;
+				tempBD->previous;
+			}
+			else if (tempBD->previous == NULL && tempBD->next == NULL)
+			{
+				makeNull(tempBD);
+			}
+			return tempBD;
 		}
+		else
+		{
+			tempBD = tempBD->next;
+		}
+	}
+	DEBUG_PRINT("not found :(");
+	return nullptr;
+}
+
+void MemoryAllocator::makeNull(BlockDescriptor *toNull)
+{
+	if (toNull == freeBlocks)
+	{
+		freeBlocks = NULL;
+	}
+	else if (toNull == blockDescriptors)
+	{
+		blockDescriptors == NULL;
+	}
+	else if (toNull == usedBlocks)
+	{
+		usedBlocks == NULL;
+	}
+}
+
+
+void MemoryAllocator::garbageCollection()
+{
+	BlockDescriptor * tempBD = freeBlocks;
+	DEBUG_PRINT("time to take out the trash");
+
+	if (freeBlocks == 0)
+	{
+		DEBUG_PRINT("there's no trash");
+		return;
+	}
+
+	while (tempBD != NULL)
+	{
+		unsigned char* searchAddress = static_cast<unsigned char*>(tempBD->baseAddress) + tempBD->size;
+		BlockDescriptor * searchBlock = findBlock(searchAddress, freeBlocks);
+
+		if (searchBlock == NULL || searchBlock->baseAddress == tempBD->baseAddress)
+		{
+			tempBD = tempBD->next;
+		}
+		else
+		{
+			DEBUG_PRINT("ULTIMATE FUSION");
+			fuseBlocks(tempBD, searchBlock);
+		}
+	}
+}
+
+BlockDescriptor * MemoryAllocator::findBlock(const void *address, BlockDescriptor * listName) const
+{
+	BlockDescriptor * tempBD = listName;
+	DEBUG_PRINT("searching for a block...");
+	
+	while (tempBD != NULL)
+	{
+		if (tempBD->baseAddress == address)
+		{
+			DEBUG_PRINT("found");
+			return tempBD;
+		}
+		else
+		{
+			tempBD = tempBD->next;
+		}
+	}
+	DEBUG_PRINT("not found");
+	return nullptr;
+}
+
+void MemoryAllocator::fuseBlocks(BlockDescriptor * blockOne, BlockDescriptor * blockTwo)
+{
+	size_t totalSize = blockOne->size + blockTwo->size;
+	blockOne->size = totalSize;
+
+	removeBlock(blockTwo->baseAddress, freeBlocks);
+	insertToUnused(blockTwo);
+}
+
+bool MemoryAllocator::isAddressInHeap(void * address) const
+{
+	DEBUG_PRINT("looking for address in heap");
+	if (address <= heapBack && address >= heapFront)
+	{
+		DEBUG_PRINT("it is");
+		return true;
+	}
+	else
+	{
+		DEBUG_PRINT("it's not");
+		return false;
+	}
+}
+
+bool MemoryAllocator::isAddressAllocated(void * address) const
+{
+	BlockDescriptor * tempBD = usedBlocks;
+	DEBUG_PRINT("checking if an address is allocated");
+
+	while (tempBD != NULL)
+	{
+		if (tempBD->baseAddress == address)
+		{
+			DEBUG_PRINT("it is");
+			return true;
+		}
+		else
+		{
+			
+			tempBD = tempBD->next;
+		}
+	}
+	DEBUG_PRINT("it's not");
+	return false;
+}
+
+size_t MemoryAllocator::getBigBlockSize()
+{
+	size_t currentBig = 0;
+	BlockDescriptor * tempBD = freeBlocks;
+	DEBUG_PRINT("checking what the largest avalable block is");
+
+	while (tempBD != NULL)
+	{
+		if (tempBD->size > currentBig)
+		{
+			currentBig = tempBD->size;
+		}
+		else
+		{
+			tempBD = tempBD->next;
+		}
+	}
+	return currentBig;
+}
+
+size_t MemoryAllocator::getFreeMemory()
+{
+	return heapRemaining;
+}
+
+MemoryAllocator::~MemoryAllocator()
+{
+	DEBUG_PRINT("BOOM");
+	_aligned_free(heapFront);
+}
+
+bool MemoryAllocator::dealloc(const void * toFree)
+{
+	BlockDescriptor * tempBD = removeBlock(toFree, usedBlocks);
+	DEBUG_PRINT("dealloc time");
+	assert(tempBD != NULL);
+
+	if (tempBD == NULL)
+	{
+		DEBUG_PRINT("there wasn't anything to dealloc");
 		return false;
 	}
 
-	bool MemoryAllocator::garbageCollection()
-	{
-		DEBUG_PRINT("garbage collection started");
-		LinkedListBD::node * currentNode = new LinkedListBD::node();
-		LinkedListBD::node * previousNode = new LinkedListBD::node();
-		currentNode = freeBlocks.head;
-		while (currentNode->next != nullptr)
-		{
-			previousNode = currentNode;
-			currentNode = currentNode->next;
-			if ((unsigned char *)previousNode->bd.address + previousNode->bd.size == (unsigned char*)currentNode->bd.address)
-			{
-				DEBUG_PRINT("combined something");
-				previousNode->bd.size += currentNode->bd.size;
-				previousNode->next = currentNode->next;
-				blockDescriptors.insertBD(currentNode->bd);
-			}
-		}
-		DEBUG_PRINT("Garbage collection completed");
-		return true;
-	}
+	insertToFree(tempBD);
+	DEBUG_PRINT("successful dealloc");
+	return true;
+}
 
-	void MemoryAllocator::printAllBlocks(LinkedListBD list)
-	{
-		LinkedListBD::node * currentNode = new LinkedListBD::node();
-		currentNode = list.head;
-		while (currentNode != nullptr)
-		{
-			DEBUG_PRINT("address %d and size %d",currentNode->bd.address,currentNode->bd.size);
-			currentNode = currentNode->next;
-		}
-	}

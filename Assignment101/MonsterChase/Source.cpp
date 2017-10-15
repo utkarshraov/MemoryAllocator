@@ -8,6 +8,7 @@
 #include "Vector2.h"
 #include "DebugStatement.h"
 #include "MemoryAllocator.h"
+#include<Windows.h>
 
 #define MONSTER_POS 1
 #define PLAYER_POS 2
@@ -109,33 +110,11 @@ int main()
 	fgets(a, 15, stdin);
 
 	*/
+	void * mem = HeapAlloc(GetProcessHeap(), 0, 2048);
+	MemoryAllocator * mgr = new MemoryAllocator(mem,2048,20);
+	//mem =  new MemoryAllocator(2048, 20);
 	
 
-	MemoryAllocator mem = MemoryAllocator(2048);
-	mem.printAllBlocks(mem.freeBlocks);
-	void * temp1 = mem.alloc(64);
-	mem.printAllBlocks(mem.usedBlocks);
-	mem.printAllBlocks(mem.freeBlocks);
-	void * temp2 = mem.alloc(32);
-	mem.printAllBlocks(mem.usedBlocks);
-	mem.printAllBlocks(mem.freeBlocks);
-	void * temp3 = mem.alloc(128);
-	mem.printAllBlocks(mem.usedBlocks);
-	void * temp4 = mem.alloc(32);
-	mem.printAllBlocks(mem.usedBlocks);
-	//mem.printAllBlocks(mem.freeBlocks);
-	//mem.printAllBlocks(mem.usedBlocks);
-	//mem.printAllBlocks(mem.usedBlocks);
-
-	mem.dealloc(temp1);
-	mem.printAllBlocks(mem.freeBlocks);
-	mem.dealloc(temp4);
-	mem.printAllBlocks(mem.freeBlocks);
-	mem.dealloc(temp2);
-
-	mem.dealloc(temp3);
-	mem.garbageCollection();
-	mem.printAllBlocks(mem.freeBlocks);
 	
 }
 

@@ -39,9 +39,6 @@
     <ClInclude Include="MemoryAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LinkedListBD.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine-init.cpp">
@@ -54,9 +51,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MemoryAllocator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LinkedListBD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

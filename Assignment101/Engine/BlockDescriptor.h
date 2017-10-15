@@ -1,7 +1,10 @@
 #pragma once
 #include<stdio.h>
-class BlockDescriptor {
+struct BlockDescriptor {
 public:
-	void * address;
+	void * baseAddress;
+	void * accessAddress;
 	size_t size;
+	BlockDescriptor * next;
+	BlockDescriptor * previous;
 };
