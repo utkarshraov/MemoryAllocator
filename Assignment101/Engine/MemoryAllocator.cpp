@@ -7,6 +7,7 @@
 
 #define DEFAULT_ALIGNMENT 4
 
+
 MemoryAllocator::MemoryAllocator(void * memPointer, size_t heapSize, unsigned int numDescriptors)
 {
 	DEBUG_PRINT("constructor called");
