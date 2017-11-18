@@ -27,6 +27,7 @@ void * operator new(size_t size, ALIGNMENT align)
 		return _aligned_malloc(size, 32);
 		break;
 	}
+
 }
 
 void * operator new(size_t size, MemoryAllocator * heap, unsigned int alignment)
@@ -35,7 +36,12 @@ void * operator new(size_t size, MemoryAllocator * heap, unsigned int alignment)
 	heap->alloc(size, alignment);
 }
 
-void operator delete(void * pointer, ALIGNMENT align)
+void * operator new[] (size_t size)
+{
+	return _aligned_malloc(size, 4);
+}
+
+void operator delete(void * pointer)
 {
 	assert(pointer != 0);
 	_aligned_free(pointer);
@@ -48,4 +54,10 @@ void operator delete(void * pointer, MemoryAllocator * heap, unsigned int align)
 	{
 		heap->dealloc(pointer);
 	}
+}
+
+void operator delete[](void * pointer)
+{
+	assert(pointer != 0);
+	_aligned_free(pointer);
 }
