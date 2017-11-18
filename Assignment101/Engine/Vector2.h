@@ -2,7 +2,9 @@
 
 namespace Engine
 {
+
 	class Vector2{
+	private:
 		int xPosition;
 		int yPosition;
 	public:
