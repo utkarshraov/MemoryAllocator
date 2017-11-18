@@ -34,3 +34,4 @@ void * operator new(size_t size, MemoryAllocator * heap, unsigned int alignment)
 	assert(heap != NULL);
 	heap->alloc(size, alignment);
 }
+

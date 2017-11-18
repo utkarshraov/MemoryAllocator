@@ -32,7 +32,7 @@ using namespace Engine;
 			exit(0);
 
 		default: DEBUG_PRINT("Wrong option entered");
-			EMIT_LOCATION();
+			//EMIT_LOCATION();
 			printf("\nINvalid option\n");
 			break;
 		}
