@@ -35,3 +35,17 @@ void * operator new(size_t size, MemoryAllocator * heap, unsigned int alignment)
 	heap->alloc(size, alignment);
 }
 
+void operator delete(void * pointer, ALIGNMENT align)
+{
+	assert(pointer != 0);
+	_aligned_free(pointer);
+}
+void operator delete(void * pointer, MemoryAllocator * heap, unsigned int align)
+{
+	assert(pointer != 0);
+	assert(heap != NULL);
+	if (heap->isAddressInHeap(pointer) && heap->isAddressAllocated(pointer))
+	{
+		heap->dealloc(pointer);
+	}
+}
