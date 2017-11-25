@@ -1,4 +1,5 @@
 #pragma once
+
 #include<stdlib.h>
 #include "MemoryAllocator.h"
 #include<assert.h>
@@ -36,7 +37,7 @@ void * operator new(size_t size, MemoryAllocator * heap, unsigned int alignment)
 	return heap->alloc(size, alignment);
 }
 
-void * operator new[] (size_t size)
+void * operator new[](size_t size)
 {
 	return _aligned_malloc(size, 4);
 }

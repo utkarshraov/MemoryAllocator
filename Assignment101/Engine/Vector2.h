@@ -1,5 +1,5 @@
 #pragma once
-
+#include<iostream>
 namespace Engine
 {
 
@@ -16,7 +16,9 @@ namespace Engine
 		Vector2(int, int);
 		Vector2();
 		bool checkEqual(Vector2);
+		friend std::ostream& operator<<(std::ostream& stream, const Vector2& vector);
 
 	};
 	Vector2 operator+(Vector2 &, Vector2 &);
+	
 }

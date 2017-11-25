@@ -1,14 +1,13 @@
 #pragma once
 #include "Vector2.h"
+#include"GameObject.h"
 using namespace Engine;
 
-class Player {
+class Player : GameObject {
 	
 public:
-	Vector2 currentLocation;
-	char playerName[15];
-	Player();
-	void updateLocation(char);
-	void setPosition(Vector2);
-
+	char * name;
+	Player(Vector2 initPosition,char * pName);
+	
+	
 };

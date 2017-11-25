@@ -1,15 +1,17 @@
 #pragma once
 #include "Vector2.h"
+#include "GameObject.h"
+#include<string>
+#include "MemoryManagement.h"
 using namespace Engine;
 
-class Monster {
+class Monster : GameObject {
 	
 	
 public:
-	Vector2 currentLocation;
-	char monsterName[15];
-	Monster();
-	void moveMonster();
+	char * name;
+	Monster(char * monName);
+
 	bool areYouFoodYet(Vector2);
-	Vector2 getLocation();
+	
 };

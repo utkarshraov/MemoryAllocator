@@ -154,6 +154,7 @@
     <ClInclude Include="Engine-init.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="MemoryAllocator.h" />
+    <ClInclude Include="MemoryManagement.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +162,6 @@
     <ClCompile Include="Engine-init.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
-    <ClCompile Include="MemoryManagement.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

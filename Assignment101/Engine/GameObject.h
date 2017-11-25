@@ -5,7 +5,7 @@ using namespace Engine;
 
 class GameObject
 {
-private:
+protected:
 	Vector2 position;
 	
 	
@@ -15,4 +15,4 @@ public:
 	inline void setPosition(Vector2 pos);
 	inline Vector2 getPosition();
 	inline void moveGameObject(Vector2 direction);
-}
+};
