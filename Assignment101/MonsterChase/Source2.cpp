@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Monster.h"
 #include<string>
+#include"MemoryManagement.h"
 #pragma once
 using namespace Engine;
 using namespace std;
@@ -13,7 +14,8 @@ void main()
 {
 	
 	int i, j, numMonsters;
-	char * monName, * playerName;
+	char *monName = new char[10];
+	char *playerName = new char[10];
 	list <Monster> Monsters;
 	cout << "Enter number of monsters" << endl;
 	cin >> numMonsters;
@@ -22,7 +24,8 @@ void main()
 	for (i = 0; i < numMonsters; i++)
 	{
 		cout << "Enter monster #" << i + 1 << "'s name" << endl;
-		cin >> monName;
+		//cin >> monName;
+		scanf("%s", monName);
 		Monster temp = Monster(monName);
 		Monsters.push_front(temp);
 	}
@@ -35,7 +38,9 @@ void main()
 	{
 		for (std::list<Monster>::iterator i = Monsters.begin(); i != Monsters.end(); i++)
 		{
-			cout << i->name << "is at ";
+			cout << i->name << "is at "<< endl;
 		}
+		break;
 	}
+	cin >> monName;
 }

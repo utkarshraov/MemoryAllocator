@@ -2,11 +2,7 @@
 #include<stdlib.h>
 #include "MemoryAllocator.h"
 #include<assert.h>
-enum ALIGNMENT {
-	DEFAULT,
-	ALIGN_16,
-	ALIGN_32
-};
+#include "MemoryManagement.h"
 
 void * operator new(size_t size)
 {

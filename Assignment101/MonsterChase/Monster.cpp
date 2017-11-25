@@ -8,8 +8,8 @@ Monster::Monster(char * monName)
 {
 	Monster::position.setX(rand() % 50);
 	Monster::position.setY(rand() % 50);
-	//name = reinterpret_cast<char *>(operator new(sizeof(monName)));
-	//*name = *monName;
+	name = reinterpret_cast<char *>(operator new(sizeof(monName)));
+	*name = *monName;
 }
 
 

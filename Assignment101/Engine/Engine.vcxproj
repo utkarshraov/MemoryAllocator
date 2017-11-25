@@ -162,6 +162,7 @@
     <ClCompile Include="Engine-init.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
+    <ClCompile Include="MemoryManagement.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

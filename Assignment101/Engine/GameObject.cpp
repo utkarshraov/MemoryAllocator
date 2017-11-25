@@ -15,6 +15,11 @@ GameObject::GameObject(Vector2 initPosition)
 	{
 		position = initPosition;
 	}
+GameObject::GameObject(GameObject * object)
+{
+	//copy constructor
+	position = object->getPosition();
+}
 inline void GameObject::setPosition(Vector2 pos)
 	{
 		position = pos;
