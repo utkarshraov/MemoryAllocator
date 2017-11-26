@@ -5,7 +5,7 @@
 #include "MemoryManagement.h"
 using namespace Engine;
 
-class Monster : GameObject {
+class Monster :public GameObject {
 	
 	
 public:
@@ -13,5 +13,6 @@ public:
 	Monster(char * monName);
 
 	bool areYouFoodYet(Vector2);
+	void moveMonster();
 	
 };

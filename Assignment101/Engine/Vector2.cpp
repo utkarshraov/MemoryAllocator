@@ -3,7 +3,10 @@
 
 namespace Engine
 {
-
+	Vector2 Up = Vector2(0, 1);
+	Vector2 Down = Vector2(0, -1);
+	Vector2 Right = Vector2(1, 0);
+	Vector2 Left = Vector2(-1, 0);
 		int Vector2::getX() const{
 			return xPosition;
 		}
@@ -44,7 +47,7 @@ namespace Engine
 		std::ostream & operator<<(std::ostream & stream, const Vector2 & vector)
 		{
 			
-			stream << vector.getX() << vector.getY();
+			stream << "("<<vector.getX() <<","<< vector.getY()<<")";
 			return stream;
 		}
 

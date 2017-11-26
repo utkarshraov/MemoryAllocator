@@ -3,7 +3,7 @@
 #include"GameObject.h"
 using namespace Engine;
 
-class Player : GameObject {
+class Player : public GameObject {
 	
 public:
 	char * name;
