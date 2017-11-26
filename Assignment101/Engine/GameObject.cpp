@@ -2,7 +2,7 @@
 #include "Vector2.h"
 #include "GameObject.h"
 
-;
+
 using namespace Engine;
 
 
@@ -20,15 +20,5 @@ GameObject::GameObject(GameObject * object)
 	//copy constructor
 	position = object->getPosition();
 }
-inline void GameObject::setPosition(Vector2 pos)
-	{
-		position = pos;
-	}
-inline Vector2 GameObject::getPosition()
-	{
-		return position;
-	}
-inline void GameObject::moveGameObject(Vector2 direction)
-	{
-		position = position + direction;
-	}
+
+

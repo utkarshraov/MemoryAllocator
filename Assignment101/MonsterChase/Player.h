@@ -8,6 +8,6 @@ class Player : public GameObject {
 public:
 	char * name;
 	Player(Vector2 initPosition,char * pName);
-	
-	
+	void inputMove(char choice);
+	void checkBounds();
 };

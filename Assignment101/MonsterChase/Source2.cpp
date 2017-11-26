@@ -8,6 +8,8 @@
 #include<string>
 #include"MemoryManagement.h"
 #pragma once
+
+
 using namespace Engine;
 using namespace std;
 
@@ -46,6 +48,8 @@ void main()
 		{
 			cout << i->name << "is at "<< i->getPosition() << endl;
 		}
+
+		cout << "Player is at " << player.getPosition() << endl;
 		cout << "Enter your move: WASD or Q to quit" << endl;
 		cin >> playerChoice;
 		switch (playerChoice)
@@ -62,9 +66,13 @@ void main()
 		case 'd':
 			player.moveGameObject(Right);
 			break;
+		case'q':
+			exit(0);
 		}
+		player.checkBounds();
 		for (std::list<Monster>::iterator i = Monsters.begin(); i != Monsters.end(); i++)
 		{
+			i->moveMonster();
 			if (i->areYouFoodYet(player.getPosition()))
 			{
 				cout << "Player has been caught" << endl;
@@ -72,5 +80,4 @@ void main()
 			}
 		}
 	}
-	cin >> monName;
 }

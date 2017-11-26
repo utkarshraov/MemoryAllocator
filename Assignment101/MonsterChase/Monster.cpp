@@ -35,6 +35,14 @@ void Monster::moveMonster()
 		moveGameObject(Right);
 		break;
 	}
+	if (position.getX() < 0)
+		position.setX(0);
+	if (position.getX() > 100)
+		position.setX(100);
+	if (position.getY() < 0)
+		position.setY(0);
+	if (position.getY() > 100)
+		position.setY(100);
 }
 
 bool Monster::areYouFoodYet(Vector2 pos) {

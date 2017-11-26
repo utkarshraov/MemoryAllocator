@@ -282,11 +282,11 @@ void MemoryAllocator::makeNull(BlockDescriptor *toNull)
 	}
 	else if (toNull == blockDescriptors)
 	{
-		blockDescriptors == NULL;
+		blockDescriptors = NULL;
 	}
 	else if (toNull == usedBlocks)
 	{
-		usedBlocks == NULL;
+		usedBlocks = NULL;
 	}
 }
 

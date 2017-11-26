@@ -14,5 +14,4 @@ public:
 
 	bool areYouFoodYet(Vector2);
 	void moveMonster();
-	
 };

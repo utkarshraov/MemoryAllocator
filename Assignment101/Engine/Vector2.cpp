@@ -50,13 +50,12 @@ namespace Engine
 			stream << "("<<vector.getX() <<","<< vector.getY()<<")";
 			return stream;
 		}
-
 		Vector2 operator+(Vector2 const &lhs, Vector2 const &rhs)
-	{	
-		Vector2 temp;
-		temp.setX(lhs.getX() + rhs.getX());
-		temp.setY(lhs.getY() + rhs.getY());
-		return  temp;
-	}
-
+		{
+			Vector2 temp;
+			temp.setX(lhs.getX() + rhs.getX());
+			temp.setY(lhs.getY() + rhs.getY());
+			return  temp;
+		}
+	
 }

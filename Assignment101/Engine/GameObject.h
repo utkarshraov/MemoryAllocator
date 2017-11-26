@@ -13,7 +13,16 @@ public:
 	GameObject();
 	GameObject(Vector2 initPosition);
 	GameObject(GameObject *object);
-	inline void setPosition(Vector2 pos);
-	inline Vector2 getPosition();
-	inline void moveGameObject(Vector2 direction);
+	inline void setPosition(Vector2 pos)
+	{
+		position = pos;
+	}
+	inline Vector2 getPosition()
+	{
+		return position;
+	}
+	inline void moveGameObject(Vector2 direction)
+	{
+		position = position + direction;
+	}
 };
