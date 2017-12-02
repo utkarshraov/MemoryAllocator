@@ -17,8 +17,7 @@ void main()
 {
 	
 	int i, j, numMonsters;
-	char *monName = new char[10];
-	char *playerName = new char[10];
+	string monName, playerName;
 	char playerChoice;
 	Vector2 Up = Vector2(0, 1);
 	Vector2 Down = Vector2(0, -1);
@@ -32,8 +31,7 @@ void main()
 	for (i = 0; i < numMonsters; i++)
 	{
 		cout << "Enter monster #" << i + 1 << "'s name" << endl;
-		//cin >> monName;
-		scanf("%s", monName);
+		cin >> monName;
 		Monster temp = Monster(monName);
 		Monsters.push_front(temp);
 	}
@@ -46,7 +44,7 @@ void main()
 	{
 		for (std::list<Monster>::iterator i = Monsters.begin(); i != Monsters.end(); i++)
 		{
-			cout << i->name << "is at "<< i->getPosition() << endl;
+			cout << i->name << " is at "<< i->getPosition() << endl;
 		}
 
 		cout << "Player is at " << player.getPosition() << endl;

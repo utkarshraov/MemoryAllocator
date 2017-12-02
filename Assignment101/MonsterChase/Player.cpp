@@ -11,7 +11,7 @@
 
 using namespace Engine;
 
-Player::Player(Vector2 initPosition, char * pName)
+Player::Player(Vector2 initPosition, string pName)
 {
 	position = initPosition;
 	name = pName;

@@ -8,12 +8,12 @@ Vector2 Right = Vector2(1, 0);
 Vector2 Left = Vector2(-1, 0);
 
 
-Monster::Monster(char * monName)
+Monster::Monster(string monName)
 {
 	Monster::position.setX(rand() % 100);
 	Monster::position.setY(rand() % 100);
 	name = reinterpret_cast<char *>(operator new(sizeof(monName)));
-	*name = *monName;
+	name = monName;
 }
 
 
