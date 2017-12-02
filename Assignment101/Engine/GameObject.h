@@ -30,8 +30,3 @@ public:
 	GameObject & GameObject::operator=(GameObject && object);
 };
 
-GameObject & GameObject::operator=(const GameObject & object)
-{
-	//assignment operator
-	setPosition(object.getPosition());
-}

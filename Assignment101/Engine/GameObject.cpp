@@ -30,5 +30,12 @@ GameObject & GameObject::operator=(GameObject && object)
 {
 	//move assignment operator
 	std::swap(position, object.getPosition());
+	return *this;
+}
+GameObject & GameObject::operator=(const GameObject & object)
+{
+	//assignment operator
+	setPosition(object.getPosition());
+	return *this;
 }
 
