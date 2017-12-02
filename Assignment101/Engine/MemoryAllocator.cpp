@@ -3,6 +3,7 @@
 #include "BlockDescriptor.h"
 #include "DebugStatement.h"
 #include "MemoryAllocator.h"
+#include "MemoryManagement.h"
 #include<assert.h>
 
 #define DEFAULT_ALIGNMENT 4
@@ -11,7 +12,8 @@
 MemoryAllocator::MemoryAllocator(void * memPointer, size_t heapSize, unsigned int numDescriptors)
 {
 	DEBUG_PRINT("constructor called");
-	heapFront = _aligned_malloc(heapSize, DEFAULT_ALIGNMENT);
+	//heapFront = _aligned_malloc(heapSize, DEFAULT_ALIGNMENT);
+	heapFront = operator new(heapSize, DEFAULT);
 	assert(heapFront != NULL);
 
 	heapRemaining = heapSize;
@@ -414,7 +416,8 @@ size_t MemoryAllocator::getFreeMemory()
 MemoryAllocator::~MemoryAllocator()
 {
 	DEBUG_PRINT("BOOM");
-	_aligned_free(heapFront);
+	//_aligned_free(heapFront);
+	operator delete(heapFront);
 }
 
 bool MemoryAllocator::dealloc(const void * toFree)
