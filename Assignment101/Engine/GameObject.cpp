@@ -15,10 +15,20 @@ GameObject::GameObject(Vector2 initPosition)
 	{
 		position = initPosition;
 	}
-GameObject::GameObject(GameObject * object)
+GameObject::GameObject(const GameObject & object)
 {
 	//copy constructor
-	position = object->getPosition();
+	Vector2(object.getPosition());
+}
+GameObject::GameObject(GameObject && object)
+{
+	//Move Constructor
+	position = Vector2(object.getPosition());
 }
 
+GameObject & GameObject::operator=(GameObject && object)
+{
+	//move assignment operator
+	std::swap(position, object.getPosition());
+}
 

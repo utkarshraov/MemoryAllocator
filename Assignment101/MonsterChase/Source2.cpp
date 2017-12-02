@@ -33,7 +33,7 @@ void main()
 		cout << "Enter monster #" << i + 1 << "'s name" << endl;
 		cin >> monName;
 		Monster temp = Monster(monName);
-		Monsters.push_front(temp);
+		Monsters.push_back(temp);
 	}
 
 	cout << "Enter Player name" << endl;
@@ -46,7 +46,12 @@ void main()
 		{
 			cout << i->name << " is at "<< i->getPosition() << endl;
 		}
-
+		int random = rand() % 100;
+		if (random >= 95)
+		{
+			Monster temp = Monster("ghost");
+			Monsters.push_back(temp);
+		}
 		cout << "Player is at " << player.getPosition() << endl;
 		cout << "Enter your move: WASD or Q to quit" << endl;
 		cin >> playerChoice;
