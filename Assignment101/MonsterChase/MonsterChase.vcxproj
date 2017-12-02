@@ -25,7 +25,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonsterController.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerController.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{78901F69-FB23-4158-BCA0-765BEF3906F8}</ProjectGuid>

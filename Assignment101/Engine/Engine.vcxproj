@@ -153,6 +153,7 @@
     <ClInclude Include="DebugStatement.h" />
     <ClInclude Include="Engine-init.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectController.h" />
     <ClInclude Include="MemoryAllocator.h" />
     <ClInclude Include="MemoryManagement.h" />
     <ClInclude Include="Vector2.h" />
