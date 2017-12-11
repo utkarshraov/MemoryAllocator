@@ -18,7 +18,7 @@ GameObject::GameObject(Vector2 initPosition)
 GameObject::GameObject(const GameObject & object)
 {
 	//copy constructor
-	Vector2(object.getPosition());
+	position = Vector2(object.getPosition());
 }
 GameObject::GameObject(GameObject && object)
 {
