@@ -3,7 +3,6 @@
 #include "BlockDescriptor.h"
 #include "DebugStatement.h"
 #include "MemoryAllocator.h"
-#include "MemoryManagement.h"
 #include<assert.h>
 
 #define DEFAULT_ALIGNMENT 4
@@ -12,8 +11,7 @@
 MemoryAllocator::MemoryAllocator(void * memPointer, size_t heapSize, unsigned int numDescriptors)
 {
 	DEBUG_PRINT("constructor called");
-	//heapFront = _aligned_malloc(heapSize, DEFAULT_ALIGNMENT);
-	heapFront = operator new(heapSize, DEFAULT);
+	heapFront = _aligned_malloc(heapSize, DEFAULT_ALIGNMENT);
 	assert(heapFront != NULL);
 
 	heapRemaining = heapSize;
@@ -43,10 +41,11 @@ void MemoryAllocator::setDescriptors(const unsigned int numDescriptors)
 
 	BlockDescriptor * temp = tempBD;
 
-	for (size_t i = 0; i < numDescriptors - 1; i++);
+	for (size_t i = 0; i < numDescriptors - 1; i++)
 	{
 		BlockDescriptor * insert = temp + 1;
 
+		temp->next = insert;
 		insert->previous = temp;
 		insert->next = NULL;
 		insert->baseAddress = NULL;
@@ -71,15 +70,15 @@ void MemoryAllocator::setDescriptors(const unsigned int numDescriptors)
 
 void MemoryAllocator::insertToFree(BlockDescriptor * toInsert)
 {
-	BlockDescriptor * tempBD = blockDescriptors;
+	BlockDescriptor * tempBD = freeBlocks;
 	DEBUG_PRINT("inserting to free");
 
-	if (blockDescriptors == 0)
+	if (freeBlocks == 0)
 	{
 		DEBUG_PRINT("FIRST TIME");
-		blockDescriptors = toInsert;
-		blockDescriptors->previous = NULL;
-		blockDescriptors->next = NULL;
+		freeBlocks = toInsert;
+		freeBlocks->previous = NULL;
+		freeBlocks->next = NULL;
 	}
 	else
 	{
@@ -95,10 +94,11 @@ void MemoryAllocator::insertToFree(BlockDescriptor * toInsert)
 
 void MemoryAllocator::insertToUnused(BlockDescriptor * toInsert)
 {
+	assert(toInsert != blockDescriptors);
 	DEBUG_PRINT("insert to BD list");
 	toInsert->baseAddress = NULL;
 	toInsert->accessAddress = NULL;
-	toInsert->size = NULL;
+	toInsert->size = 0;
 	toInsert->next = NULL;
 	toInsert->previous = NULL;
 
@@ -155,7 +155,7 @@ void * MemoryAllocator::alloc(size_t blockSize, unsigned int alignmentValue)
 	}
 	BlockDescriptor * tempBD = findFreeBlock(blockSize);
 
-	if (tempBD == NULL) 
+	if (tempBD == NULL)
 	{
 		DEBUG_PRINT("no free block big enough");
 		return nullptr;
@@ -163,7 +163,10 @@ void * MemoryAllocator::alloc(size_t blockSize, unsigned int alignmentValue)
 
 	BlockDescriptor * dividedBlock = divideBlock(tempBD, blockSize, alignmentValue);
 
-	dividedBlock->size = blockSize;
+	if (dividedBlock == nullptr)
+		return nullptr;
+
+	//dividedBlock->size = blockSize;
 
 	insertToUsed(dividedBlock);
 	return dividedBlock->baseAddress;
@@ -196,7 +199,23 @@ BlockDescriptor * MemoryAllocator::findFreeBlock(const size_t blockSize) const
 BlockDescriptor * MemoryAllocator::divideBlock(BlockDescriptor * toDivide, const size_t blockSize, const unsigned int alignmentValue)
 {
 	DEBUG_PRINT("dividing bigger block");
+	if (toDivide->size == blockSize)
+	{
+		DEBUG_PRINT("the block was EXACTLY the right size wew");
+		removeBlock(toDivide->baseAddress, freeBlocks);
+		return toDivide;
+		//insertToUsed(toDivide);
+	}
+	if (blockSize == 462)
+	{
+		int x = 0;
+	}
 	BlockDescriptor * tempBD = blockDescriptors;
+
+	if (tempBD == nullptr)
+		return nullptr;
+
+
 	blockDescriptors = blockDescriptors->next;
 
 	tempBD->next = NULL;
@@ -210,12 +229,12 @@ BlockDescriptor * MemoryAllocator::divideBlock(BlockDescriptor * toDivide, const
 	toDivide->size -= blockSize;
 	toDivide->baseAddress = static_cast<unsigned char*>(toDivide->baseAddress) + tempBD->size;
 
-	if (toDivide->size == 0)
+	/*if (toDivide->size == 0)
 	{
-		DEBUG_PRINT("the block was EXACTLY the right size wew");
-		removeBlock(toDivide, freeBlocks);
-		insertToUnused(toDivide);
-	}
+	DEBUG_PRINT("the block was EXACTLY the right size wew");
+	removeBlock(toDivide, freeBlocks);
+	insertToUsed(toDivide);
+	}*/
 	return tempBD;
 }
 
@@ -230,7 +249,7 @@ BlockDescriptor * MemoryAllocator::removeBlock(const void * address, BlockDescri
 		if (tempBD->baseAddress == address)
 		{
 			DEBUG_PRINT("FOUND");
-			if (tempBD->previous->previous == NULL && tempBD->next == NULL)
+			if (tempBD->previous == NULL && tempBD->next != NULL)
 			{
 				if (tempBD == freeBlocks)
 				{
@@ -259,7 +278,7 @@ BlockDescriptor * MemoryAllocator::removeBlock(const void * address, BlockDescri
 			else if (tempBD->previous != NULL && tempBD->next == NULL)
 			{
 				tempBD->previous->next = NULL;
-				tempBD->previous;
+				tempBD->previous = NULL;
 			}
 			else if (tempBD->previous == NULL && tempBD->next == NULL)
 			{
@@ -293,39 +312,33 @@ void MemoryAllocator::makeNull(BlockDescriptor *toNull)
 }
 
 
+
+
 void MemoryAllocator::garbageCollection()
 {
 	BlockDescriptor * tempBD = freeBlocks;
-	DEBUG_PRINT("time to take out the trash");
-
-	if (freeBlocks == 0)
-	{
-		DEBUG_PRINT("there's no trash");
-		return;
-	}
 
 	while (tempBD != NULL)
 	{
-		unsigned char* searchAddress = static_cast<unsigned char*>(tempBD->baseAddress) + tempBD->size;
-		BlockDescriptor * searchBlock = findBlock(searchAddress, freeBlocks);
-
-		if (searchBlock == NULL || searchBlock->baseAddress == tempBD->baseAddress)
+		unsigned char * toFind = reinterpret_cast<unsigned char *>(tempBD->baseAddress) + tempBD->size;
+		BlockDescriptor * foundBlock = findBlock(toFind, freeBlocks);
+		if (foundBlock == NULL || foundBlock->baseAddress == tempBD->baseAddress)
 		{
 			tempBD = tempBD->next;
 		}
 		else
 		{
-			DEBUG_PRINT("ULTIMATE FUSION");
-			fuseBlocks(tempBD, searchBlock);
+			fuseBlocks(tempBD, foundBlock);
+			DEBUG_PRINT("fusing");
 		}
 	}
 }
 
-BlockDescriptor * MemoryAllocator::findBlock(const void *address, BlockDescriptor * listName) const
+BlockDescriptor * MemoryAllocator::findBlock(const void * address, BlockDescriptor * listName) const
 {
 	BlockDescriptor * tempBD = listName;
 	DEBUG_PRINT("searching for a block...");
-	
+
 	while (tempBD != NULL)
 	{
 		if (tempBD->baseAddress == address)
@@ -345,8 +358,9 @@ BlockDescriptor * MemoryAllocator::findBlock(const void *address, BlockDescripto
 void MemoryAllocator::fuseBlocks(BlockDescriptor * blockOne, BlockDescriptor * blockTwo)
 {
 	size_t totalSize = blockOne->size + blockTwo->size;
+	printf("fusing %d + %d = %d", blockOne->size, blockTwo->size, totalSize);
 	blockOne->size = totalSize;
-
+	blockTwo->size = 0;
 	removeBlock(blockTwo->baseAddress, freeBlocks);
 	insertToUnused(blockTwo);
 }
@@ -380,7 +394,7 @@ bool MemoryAllocator::isAddressAllocated(void * address) const
 		}
 		else
 		{
-			
+
 			tempBD = tempBD->next;
 		}
 	}
@@ -416,14 +430,13 @@ size_t MemoryAllocator::getFreeMemory()
 MemoryAllocator::~MemoryAllocator()
 {
 	DEBUG_PRINT("BOOM");
-	//_aligned_free(heapFront);
-	operator delete(heapFront);
+	_aligned_free(heapFront);
 }
 
 bool MemoryAllocator::dealloc(const void * toFree)
 {
 	BlockDescriptor * tempBD = removeBlock(toFree, usedBlocks);
-	DEBUG_PRINT("dealloc time");
+	printf("dealloc time = %d", tempBD->size);
 	assert(tempBD != NULL);
 
 	if (tempBD == NULL)
@@ -433,7 +446,7 @@ bool MemoryAllocator::dealloc(const void * toFree)
 	}
 
 	insertToFree(tempBD);
+	printf("\n free list\n");
 	DEBUG_PRINT("successful dealloc");
 	return true;
 }
-

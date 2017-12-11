@@ -4,27 +4,7 @@
 #include<assert.h>
 #include "MemoryManagement.h"
 
-void * operator new(size_t size)
-{
-	return _aligned_malloc(size, 4);
-}
 
-void * operator new(size_t size, ALIGNMENT align)
-{
-	switch (align)
-	{
-	case DEFAULT:
-		return _aligned_malloc(size, 4);
-		break;
-	case ALIGN_16:
-		return _aligned_malloc(size, 16);
-		break;
-	case ALIGN_32:
-		return _aligned_malloc(size, 32);
-		break;
-	}
-
-}
 
 void * operator new(size_t size, MemoryAllocator * heap, unsigned int alignment)
 {
@@ -32,17 +12,20 @@ void * operator new(size_t size, MemoryAllocator * heap, unsigned int alignment)
 	return heap->alloc(size, alignment);
 }
 
-void * operator new[] (size_t size)
+void * operator new(size_t size, MemoryAllocator * heap)
 {
-	return _aligned_malloc(size, 4);
+	assert(heap != NULL);
+	return heap->alloc(size, 4);
 }
 
-void operator delete(void * pointer)
+void * operator new[](size_t size, MemoryAllocator * heap)
 {
-	assert(pointer != 0);
-	_aligned_free(pointer);
+	assert(heap != NULL);
+	return heap->alloc(size, 4);
 }
-void operator delete(void * pointer, MemoryAllocator * heap, unsigned int align)
+
+
+void operator delete(void * pointer, MemoryAllocator * heap)
 {
 	assert(pointer != 0);
 	assert(heap != NULL);
@@ -52,8 +35,12 @@ void operator delete(void * pointer, MemoryAllocator * heap, unsigned int align)
 	}
 }
 
-void operator delete[](void * pointer)
+void operator delete[](void * pointer, MemoryAllocator * heap)
 {
 	assert(pointer != 0);
-	_aligned_free(pointer);
+	assert(heap != NULL);
+	if (heap->isAddressInHeap(pointer) && heap->isAddressAllocated(pointer))
+	{
+		heap->dealloc(pointer);
+	}
 }
