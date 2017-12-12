@@ -149,9 +149,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitArray.h" />
     <ClInclude Include="BlockDescriptor.h" />
     <ClInclude Include="DebugStatement.h" />
     <ClInclude Include="Engine-init.h" />
+    <ClInclude Include="FixedSizeAllocator.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectController.h" />
     <ClInclude Include="MemoryAllocator.h" />
@@ -159,6 +161,7 @@
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BitArray.cpp" />
     <ClCompile Include="DebugStatement.cpp" />
     <ClCompile Include="Engine-init.cpp" />
     <ClCompile Include="GameObject.cpp" />
