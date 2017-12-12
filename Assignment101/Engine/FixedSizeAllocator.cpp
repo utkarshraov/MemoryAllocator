@@ -13,12 +13,13 @@ void FSA::setAddresses()
 
 void * FSA::getBlock()
 {
+	assert(!bArray->areAllSet()); // Check if there is space in the FSA
 	size_t index = bArray->firstClear();
 	bArray->setBit(index);
 	return memAddress[index];
 }
 
-bool FSA::returnBlock(void * pointer)
+bool FSA::returnBlock(const void * pointer)
 {
 	if (isAllocated(pointer))
 	{
@@ -35,7 +36,7 @@ bool FSA::returnBlock(void * pointer)
 		return false;
 }
 
-bool FSA::contains(void * pointer) const
+bool FSA::contains(const void * pointer) const
 {
 	if (pointer >= FSAStart && pointer <= FSAEnd)
 	{
@@ -47,7 +48,7 @@ bool FSA::contains(void * pointer) const
 	}
 }
 
-bool FSA::isAllocated(void * pointer) const
+bool FSA::isAllocated(const void * pointer) const
 {
 	assert(contains(pointer));
 	size_t i = 0;

@@ -2,6 +2,7 @@
 #include"MemoryAllocator.h"
 #include "BitArray.h"
 #include<vector>
+#include<assert.h>
 
 class FSA
 {
@@ -23,9 +24,9 @@ public:
 		
 	}
 	void * getBlock();
-	bool returnBlock(void * pointer);
-	bool contains(void * pointer) const;
-	bool isAllocated(void * pointer) const;
+	bool returnBlock(const void * pointer);
+	bool contains(const void * pointer) const;
+	bool isAllocated(const void * pointer) const;
 private:
 	BitArray * bArray;
 	MemoryAllocator * thisHeap;
