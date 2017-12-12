@@ -4,7 +4,8 @@
 #include "MemoryAllocator.h"
 #include<string.h>
 #include<assert.h>
-
+#include<intrin.h>
+#include"MemoryManagement.h"
 class BitArray
 {
 public:
@@ -23,7 +24,7 @@ public:
 		sizeOfArray = numBits;
 	}
 	static BitArray * Create(size_t numBits, bool initToZero, MemoryAllocator * heap);
-	~BitArray();
+	~BitArray() {};
 	size_t firstSet();
 	size_t firstClear();
 	bool isClear(size_t index) const;
@@ -32,6 +33,7 @@ public:
 	void clearBit(size_t index);
 	void setAll(bool setValue);
 	bool areAllClear();
+	bool areAllSet();
 private:
 #ifdef _WIN32
 		uint32_t * bits;
