@@ -164,6 +164,7 @@
     <ClCompile Include="BitArray.cpp" />
     <ClCompile Include="DebugStatement.cpp" />
     <ClCompile Include="Engine-init.cpp" />
+    <ClCompile Include="FixedSizeAllocator.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
     <ClCompile Include="MemoryManagement.cpp" />

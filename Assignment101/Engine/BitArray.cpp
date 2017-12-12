@@ -19,7 +19,7 @@
 void BitArray::setBit(size_t index)
 {
 	//Sets the bit at index to 1
-	assert(index > 0);
+	assert(index >= 0);
 	size_t bitIndex = index / bitPerByte;
 	size_t offset = index % bitPerByte;
 
@@ -35,7 +35,7 @@ void BitArray::setBit(size_t index)
 void BitArray::clearBit(size_t index)
 {
 	//sets the bit at index to 0
-	assert(index > 0);
+	assert(index >= 0);
 	size_t bitIndex = index / bitPerByte;
 	size_t offset = index % bitPerByte;
 
@@ -74,7 +74,7 @@ bool BitArray::isSet(size_t index) const
 bool BitArray::isClear(size_t index) const
 {
 	//checks if the bit at index is 0
-	assert(index > 0);
+	assert(index >= 0);
 	size_t bitIndex = index / bitPerByte;
 	size_t offset = index % bitPerByte;
 

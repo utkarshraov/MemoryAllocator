@@ -6,6 +6,8 @@
 #include<assert.h>
 #include<intrin.h>
 #include"MemoryManagement.h"
+
+
 class BitArray
 {
 public:
@@ -22,9 +24,12 @@ public:
 		assert(bits);
 		memset(bits, initToZero ? 0 : 1, numBits / bitPerByte);
 		sizeOfArray = numBits;
+		thisHeap = heap;
 	}
 	static BitArray * Create(size_t numBits, bool initToZero, MemoryAllocator * heap);
-	~BitArray() {};
+	~BitArray() {
+		//operator delete(reinterpret_cast<unsigned char *>(*this), *thisHeap);
+	};
 	size_t firstSet();
 	size_t firstClear();
 	bool isClear(size_t index) const;
@@ -43,5 +48,5 @@ private:
 		const size_t bitPerByte = 64;
 #endif
 		size_t sizeOfArray;
-
+		MemoryAllocator * thisHeap;
 };
