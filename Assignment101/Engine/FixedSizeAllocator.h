@@ -1,5 +1,5 @@
 #pragma once
-#include"MemoryAllocator.h"
+#include "MemoryAllocator.h"
 #include "BitArray.h"
 #include<vector>
 #include<assert.h>
@@ -13,15 +13,20 @@ public:
 		assert(heap);
 		assert(blockSize);
 		thisHeap = heap;
-		FSAStart = thisHeap->alloc((blockSize * numBlocks));
+		FSAStart = heap->alloc((blockSize * numBlocks));
 		uintptr_t temp = reinterpret_cast<uintptr_t>(FSAStart) + (blockSize*numBlocks);
 		FSAEnd = reinterpret_cast<void*>(temp);
 		totalBlocks = numBlocks;
+		blocksRemaining = numBlocks;
 		blockWidth = blockSize;
 		bArray = BitArray::Create(numBlocks,0, thisHeap);
 		memAddress = new void*[numBlocks];
 		setAddresses();
 		
+	}
+	~FSA()
+	{
+		thisHeap->dealloc(FSAStart);
 	}
 	void * getBlock();
 	bool returnBlock(const void * pointer);
@@ -33,6 +38,7 @@ private:
 	size_t blockWidth;
 	void ** memAddress;
 	size_t totalBlocks;
+	size_t blocksRemaining;
 	void * FSAStart;
 	void * FSAEnd;
 	void setAddresses();

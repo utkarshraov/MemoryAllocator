@@ -4,7 +4,7 @@
 #include "MemoryAllocator.h"
 #include<assert.h>
 
-
+class MemoryAllocator;
 enum ALIGNMENT {
 	DEFAULT,
 	ALIGN_16,

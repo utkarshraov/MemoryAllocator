@@ -3,7 +3,9 @@
 #include "BlockDescriptor.h"
 #include "DebugStatement.h"
 #include "MemoryAllocator.h"
+#include"FixedSizeAllocator.h"
 #include<assert.h>
+#pragma once
 
 #define DEFAULT_ALIGNMENT 4
 
@@ -13,11 +15,12 @@ MemoryAllocator::MemoryAllocator(void * memPointer, size_t heapSize, unsigned in
 	DEBUG_PRINT("constructor called");
 	heapFront = _aligned_malloc(heapSize, DEFAULT_ALIGNMENT);
 	assert(heapFront != NULL);
-
+	
 	heapRemaining = heapSize;
 	heapBack = reinterpret_cast<unsigned char*>(heapFront) + heapSize;
-
 	setDescriptors(numDescriptors);
+	size8 = new FSA(1000, this, 8);   // Initialising the fixed size allocators from the heap
+	size16 = new FSA(1000, this, 16);
 	DEBUG_PRINT("constructor completed");
 }
 
@@ -147,29 +150,39 @@ void * MemoryAllocator::alloc(const size_t blockSize)
 void * MemoryAllocator::alloc(size_t blockSize, unsigned int alignmentValue)
 {
 	DEBUG_PRINT("alloc %d", blockSize);
-
-	if (freeBlocks == NULL)
+	if (blockSize <= 8)
 	{
-		DEBUG_PRINT("no free blocks");
-		return nullptr;
+		return size8->getBlock();
 	}
-	BlockDescriptor * tempBD = findFreeBlock(blockSize);
-
-	if (tempBD == NULL)
+	else if (blockSize > 8 && blockSize <= 16)
 	{
-		DEBUG_PRINT("no free block big enough");
-		return nullptr;
+		return size16->getBlock();
 	}
+	else 
+	{
+		if (freeBlocks == NULL)
+		{
+			DEBUG_PRINT("no free blocks");
+			return nullptr;
+		}
+		BlockDescriptor * tempBD = findFreeBlock(blockSize);
 
-	BlockDescriptor * dividedBlock = divideBlock(tempBD, blockSize, alignmentValue);
+		if (tempBD == NULL)
+		{
+			DEBUG_PRINT("no free block big enough");
+			return nullptr;
+		}
 
-	if (dividedBlock == nullptr)
-		return nullptr;
+		BlockDescriptor * dividedBlock = divideBlock(tempBD, blockSize, alignmentValue);
 
-	//dividedBlock->size = blockSize;
+		if (dividedBlock == nullptr)
+			return nullptr;
 
-	insertToUsed(dividedBlock);
-	return dividedBlock->baseAddress;
+		//dividedBlock->size = blockSize;
+
+		insertToUsed(dividedBlock);
+		return dividedBlock->baseAddress;
+	}
 }
 
 
@@ -435,18 +448,30 @@ MemoryAllocator::~MemoryAllocator()
 
 bool MemoryAllocator::dealloc(const void * toFree)
 {
-	BlockDescriptor * tempBD = removeBlock(toFree, usedBlocks);
-	printf("dealloc time = %d", tempBD->size);
-	assert(tempBD != NULL);
-
-	if (tempBD == NULL)
+	if (size8->isAllocated(toFree))
 	{
-		DEBUG_PRINT("there wasn't anything to dealloc");
-		return false;
+		DEBUG_PRINT("dealloc from size8");
+		return size8->returnBlock(toFree);
 	}
+	else if (size16->isAllocated(toFree))
+	{
+		DEBUG_PRINT("dealloc from size16");
+		return size16->returnBlock(toFree);
+	}
+	else {
+		BlockDescriptor * tempBD = removeBlock(toFree, usedBlocks);
+		printf("dealloc time = %d", tempBD->size);
+		assert(tempBD != NULL);
 
-	insertToFree(tempBD);
-	printf("\n free list\n");
-	DEBUG_PRINT("successful dealloc");
-	return true;
+		if (tempBD == NULL)
+		{
+			DEBUG_PRINT("there wasn't anything to dealloc");
+			return false;
+		}
+
+		insertToFree(tempBD);
+		printf("\n free list\n");
+		DEBUG_PRINT("successful dealloc");
+		return true;
+	}
 }

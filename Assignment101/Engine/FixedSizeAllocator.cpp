@@ -16,6 +16,7 @@ void * FSA::getBlock()
 	assert(!bArray->areAllSet()); // Check if there is space in the FSA
 	size_t index = bArray->firstClear();
 	bArray->setBit(index);
+	blocksRemaining--;
 	return memAddress[index];
 }
 
@@ -30,6 +31,7 @@ bool FSA::returnBlock(const void * pointer)
 				break;
 		}
 		bArray->clearBit(i);
+		blocksRemaining++;
 		return true;
 	}
 	else

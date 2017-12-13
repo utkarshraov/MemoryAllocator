@@ -1,12 +1,11 @@
 #pragma once
 #include<stdlib.h>
 #include<cstdint>
-#include "MemoryAllocator.h"
 #include<string.h>
 #include<assert.h>
 #include<intrin.h>
 #include"MemoryManagement.h"
-
+#include"MemoryAllocator.h"
 
 class BitArray
 {

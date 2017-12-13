@@ -4,6 +4,8 @@
 #include "BlockDescriptor.h"
 #include "DebugStatement.h"
 
+class FSA;
+
 class MemoryAllocator {
 public:
 
@@ -33,6 +35,8 @@ private:
 	void * heapBack;
 	size_t heapRemaining = 0;
 	void setDescriptors(const unsigned int numDescriptors);
+	FSA * size8;
+	FSA * size16;
 
 	void insertToUnused(BlockDescriptor * toInsert);
 	void insertToFree(BlockDescriptor * toInsert);
