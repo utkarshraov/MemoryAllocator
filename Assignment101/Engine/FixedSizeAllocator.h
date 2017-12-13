@@ -27,6 +27,12 @@ public:
 	}
 	~FSA()
 	{
+#ifdef _DEBUG
+		if (blocksRemaining < totalBlocks)
+		{
+			DEBUG_PRINT("There are still allocations left!! unsafe destructor");
+		}
+#endif
 		thisHeap->dealloc(FSAStart);
 	}
 	void * getBlock();

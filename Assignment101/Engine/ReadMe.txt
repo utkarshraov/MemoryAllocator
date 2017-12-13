@@ -1,29 +1,16 @@
-========================================================================
-    STATIC LIBRARY : Engine Project Overview
-========================================================================
+Final Exam ReadMe.txt
 
-AppWizard has created this Engine library project for you.
+1) The BitArray class uses uint32_t or uint64_t depending on the system
+file: BitArray.h and BitARray.cpp, almost every function uses it in some way
 
-No source files were created as part of your project.
+2) _BitScanForward and _BiitScanForward64are used appropriately(I think) in BitArray.cpp line 141 and line 167
 
+3) Some of the bit math in the Bit Array class was fun to come up with
+in BitArray.cpp line 165 (firstClear()), I used the same logic as firstSet() to find the first clear bit, except i logical NOT the block before using bitScanForward to find 0s instead of 1s
 
-Engine.vcxproj
-    This is the main project file for VC++ projects generated using an Application Wizard.
-    It contains information about the version of Visual C++ that generated the file, and
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
+The math to clear and set bits at line 32 and 48 in BitArray.cpp is interesting. 
+To clear a bit, I find the block and index within the block using a divide and modulo respectively
+THen i create a mask value of 1 and shift it left by the offset, and then logical OR/ subtract it depending on whether i'm setting it to 0 or 1
 
-Engine.vcxproj.filters
-    This is the filters file for VC++ projects generated using an Application Wizard. 
-    It contains information about the association between the files in your project 
-    and the filters. This association is used in the IDE to show grouping of files with
-    similar extensions under a specific node (for e.g. ".cpp" files are associated with the
-    "Source Files" filter).
-
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
-
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
-
-/////////////////////////////////////////////////////////////////////////////
+4)The Fixed Size Allocators are integrated into my Memory Allocator in MemoryAllocator.h at line 38,39
+They are used in allocs and deallocs in MemoryAllocator.cpp at lines 152 and 451

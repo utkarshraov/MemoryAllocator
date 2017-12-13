@@ -139,7 +139,7 @@ size_t BitArray::firstSet()
 	{
 #ifdef _WIN32
 		result = _BitScanForward(&position, bits[index]);
-#elif _WIN64
+#elif defined _WIN64
 		result = _BitScanForward64(&position, bits[index]);
 #endif
 		if (result)
