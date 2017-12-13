@@ -27,7 +27,6 @@ public:
 	}
 	static BitArray * Create(size_t numBits, bool initToZero, MemoryAllocator * heap);
 	~BitArray() {
-		//operator delete(reinterpret_cast<unsigned char *>(*this), *thisHeap);
 	};
 	size_t firstSet();
 	size_t firstClear();

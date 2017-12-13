@@ -42,4 +42,9 @@
       <UniqueIdentifier>{222c7174-7fd3-4468-adfb-b10fbf1068ec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Engine\ReadMe.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

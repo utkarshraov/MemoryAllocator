@@ -397,22 +397,25 @@ bool MemoryAllocator::isAddressAllocated(void * address) const
 {
 	BlockDescriptor * tempBD = usedBlocks;
 	DEBUG_PRINT("checking if an address is allocated");
-
-	while (tempBD != NULL)
-	{
-		if (tempBD->baseAddress == address)
+	if (size16->contains(address) || size8->contains(address))
+		return true;
+	else {
+		while (tempBD != NULL)
 		{
-			DEBUG_PRINT("it is");
-			return true;
-		}
-		else
-		{
+			if (tempBD->baseAddress == address)
+			{
+				DEBUG_PRINT("it is");
+				return true;
+			}
+			else
+			{
 
-			tempBD = tempBD->next;
+				tempBD = tempBD->next;
+			}
 		}
+		DEBUG_PRINT("it's not");
+		return false;
 	}
-	DEBUG_PRINT("it's not");
-	return false;
 }
 
 size_t MemoryAllocator::getBigBlockSize()
@@ -443,6 +446,8 @@ size_t MemoryAllocator::getFreeMemory()
 MemoryAllocator::~MemoryAllocator()
 {
 	DEBUG_PRINT("BOOM");
+	size16->~FSA();
+	size8->~FSA();
 	_aligned_free(heapFront);
 }
 

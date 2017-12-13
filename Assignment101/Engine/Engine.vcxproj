@@ -146,9 +146,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="BitArray.h" />
     <ClInclude Include="BlockDescriptor.h" />
     <ClInclude Include="DebugStatement.h" />
