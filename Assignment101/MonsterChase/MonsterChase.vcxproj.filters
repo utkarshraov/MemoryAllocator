@@ -10,6 +10,12 @@
     <ClCompile Include="Source2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\HeapManagerUnitTest\HeapManager_UnitTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HeapManagerUnitTest\HeapManagerProxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -22,6 +28,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HeapManagerUnitTest\HeapManagerProxy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

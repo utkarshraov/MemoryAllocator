@@ -19,11 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\HeapManagerUnitTest\HeapManagerProxy.cpp" />
+    <ClCompile Include="..\HeapManagerUnitTest\HeapManager_UnitTest.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Source2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\HeapManagerUnitTest\HeapManagerProxy.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterController.h" />
     <ClInclude Include="Player.h" />

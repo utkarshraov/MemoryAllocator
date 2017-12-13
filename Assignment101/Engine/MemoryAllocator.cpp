@@ -150,11 +150,11 @@ void * MemoryAllocator::alloc(const size_t blockSize)
 void * MemoryAllocator::alloc(size_t blockSize, unsigned int alignmentValue)
 {
 	DEBUG_PRINT("alloc %d", blockSize);
-	if (blockSize <= 8)
+	if (blockSize <= 8 && size8->hasSpace())
 	{
 		return size8->getBlock();
 	}
-	else if (blockSize > 8 && blockSize <= 16)
+	else if ((blockSize > 8) && (blockSize <= 16) && size16->hasSpace())
 	{
 		return size16->getBlock();
 	}

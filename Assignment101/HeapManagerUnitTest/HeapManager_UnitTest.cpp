@@ -192,7 +192,6 @@ bool HeapManager_UnitTest()
 #endif // SUPPORTS_SHOWOUTSTANDINGALLOCATIONS
 		printf("\n");
 #endif
-		pHeapManager->showList();
 		printf("before\n");
 		// do garbage collection
 		Collect(pHeapManager);

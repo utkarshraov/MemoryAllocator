@@ -23,6 +23,7 @@ public:
 		memAddress = new void*[numBlocks];
 		setAddresses();
 		
+		
 	}
 	~FSA()
 	{
@@ -32,6 +33,12 @@ public:
 	bool returnBlock(const void * pointer);
 	bool contains(const void * pointer) const;
 	bool isAllocated(const void * pointer) const;
+	bool hasSpace() {
+		if (blocksRemaining>0)
+			return true;
+		else
+			return false;
+	}
 private:
 	BitArray * bArray;
 	MemoryAllocator * thisHeap;

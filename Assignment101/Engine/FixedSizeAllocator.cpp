@@ -52,12 +52,16 @@ bool FSA::contains(const void * pointer) const
 
 bool FSA::isAllocated(const void * pointer) const
 {
-	assert(contains(pointer));
-	size_t i = 0;
-	for (i = 0; i < totalBlocks-1; i++)
+	if (contains(pointer))
 	{
-		if (memAddress[i] == pointer)
-			return true;
+		size_t i = 0;
+		for (i = 0; i < totalBlocks - 1; i++)
+		{
+			if (memAddress[i] == pointer)
+				return true;
+		}
 	}
-	return false;
+	
+	else
+		return false;
 }
