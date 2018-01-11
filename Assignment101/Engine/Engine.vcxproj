@@ -158,7 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BitArray.cpp" />
+    <ClCompile Include="DebugStatement.cpp" />
     <ClCompile Include="FixedSizeAllocator.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
     <ClCompile Include="MemoryManagement.cpp" />
     <ClCompile Include="Vector2.cpp" />
