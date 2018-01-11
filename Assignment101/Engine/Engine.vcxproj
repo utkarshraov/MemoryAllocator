@@ -149,7 +149,6 @@
     <ClInclude Include="BitArray.h" />
     <ClInclude Include="BlockDescriptor.h" />
     <ClInclude Include="DebugStatement.h" />
-    <ClInclude Include="Engine-init.h" />
     <ClInclude Include="FixedSizeAllocator.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectController.h" />
@@ -159,10 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BitArray.cpp" />
-    <ClCompile Include="DebugStatement.cpp" />
-    <ClCompile Include="Engine-init.cpp" />
     <ClCompile Include="FixedSizeAllocator.cpp" />
-    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
     <ClCompile Include="MemoryManagement.cpp" />
     <ClCompile Include="Vector2.cpp" />
